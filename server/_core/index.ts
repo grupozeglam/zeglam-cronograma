@@ -2,6 +2,11 @@ import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import net from "net";
+import { migrate } from "drizzle-orm/mysql2/migrator";
+import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
+import path from "path";
+import { fileURLToPath } from "url";
 import multer from "multer";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
@@ -40,99 +45,28 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
   throw new Error(`No available port found starting from ${startPort}`);
 }
 
-async function ensureDatabaseInitialized() {
-  console.log("🔍 [Database] Verificando inicialização...");
-  const db = await getDb();
-  if (!db) {
-    console.error("❌ [Database] Não foi possível conectar ao banco para inicializar.");
-    return;
-  }
-
-  try {
-    // 1. Verificar se a tabela de admin existe (se não, as tabelas provavelmente não existem)
-    const tables = await db.execute(sql`SHOW TABLES`);
-    const tableList = (tables[0] as any[]).map(t => Object.values(t)[0]);
-    
-    if (!tableList.includes("admin_users")) {
-      console.log("🏗️ [Database] Tabelas não encontradas. Por favor, execute 'pnpm db:push' ou verifique as migrações.");
-      // Em um ambiente ideal, rodaríamos migrações aqui, mas db:push exige drizzle-kit que é devDep.
-      // Vamos tentar pelo menos o seed se as tabelas existirem.
-    }
-
-    // 2. Auto-Seed de Status se estiver vazio
-    const statuses = await db.select().from(linkStatuses).limit(1);
-    if (statuses.length === 0) {
-      console.log("🌱 [Database] Semeando status padrão...");
-      const defaultStatuses = [
-        { name: "Finalizado", color: "#22c55e", bgColor: "rgba(34,197,94,0.15)", sortOrder: 1 },
-        { name: "Em Separação", color: "#3b82f6", bgColor: "rgba(59,130,246,0.15)", sortOrder: 2 },
-        { name: "Em trânsito", color: "#f59e0b", bgColor: "rgba(245,158,11,0.15)", sortOrder: 3 },
-        { name: "Link Aberto", color: "#10b981", bgColor: "rgba(16,185,129,0.15)", sortOrder: 4 },
-        { name: "Verificando Estoque", color: "#ec4899", bgColor: "rgba(236,72,153,0.15)", sortOrder: 5 },
-        { name: "Cancelado", color: "#ef4444", bgColor: "rgba(239,68,68,0.15)", sortOrder: 6 },
-        { name: "Fornecedor separando o pedido", color: "#f97316", bgColor: "rgba(249,115,22,0.15)", sortOrder: 7 },
-        { name: "Em Breve", color: "#e5e7eb", bgColor: "rgba(229,231,235,0.15)", sortOrder: 8 },
-        { name: "Fechado", color: "#6b7280", bgColor: "rgba(107,114,128,0.15)", sortOrder: 9 },
-        { name: "Aguardando Pagamentos", color: "#eab308", bgColor: "rgba(234,179,8,0.15)", sortOrder: 10 },
-        { name: "Liberado pra Envio", color: "#06b6d4", bgColor: "rgba(6,182,212,0.15)", sortOrder: 11 },
-        { name: "Produção/Fabricação", color: "#a855f7", bgColor: "rgba(168,85,247,0.15)", sortOrder: 12 },
-      ];
-      for (const s of defaultStatuses) {
-        await db.insert(linkStatuses).values(s).onDuplicateKeyUpdate({ set: { name: s.name } });
-      }
-    }
-
-    // 3. Auto-Seed de Departamentos se estiver vazio
-    const depts = await db.select().from(linkDepartments).limit(1);
-    if (depts.length === 0) {
-      console.log("🌱 [Database] Semeando departamentos padrão...");
-      const defaultDepts = [
-        { name: "Separação", sortOrder: 1 },
-        { name: "Fornecedor", sortOrder: 2 },
-        { name: "Grupo Zeglam", sortOrder: 3 },
-        { name: "Setor de Envios", sortOrder: 4 },
-        { name: "Financeiro", sortOrder: 5 },
-      ];
-      for (const d of defaultDepts) {
-        await db.insert(linkDepartments).values(d).onDuplicateKeyUpdate({ set: { name: d.name } });
-      }
-    }
-
-    // 4. Auto-Seed de Admin padrão se estiver vazio
-    const admins = await db.select().from(adminUsers).limit(1);
-    if (admins.length === 0) {
-      console.log("🌱 [Database] Criando admin padrão...");
-      const passwordHash = bcrypt.hashSync("admin123", 10);
-      await db.insert(adminUsers).values({
-        name: "Administrador",
-        username: "admin",
-        passwordHash
-      }).onDuplicateKeyUpdate({ set: { username: "admin" } });
-    }
-
-    // 5. Auto-Seed de Configurações de Colunas
-    const settings = await db.select().from(columnSettings).limit(1);
-    if (settings.length === 0) {
-      console.log("🌱 [Database] Criando configurações de colunas...");
-      await db.insert(columnSettings).values({
-        id: 1,
-        encerramentoLink: true,
-        conferenciaEstoque: true,
-        romaneiosClientes: true,
-        postadoFornecedor: true,
-        dataInicioSeparacao: true,
-        liberadoEnvio: true
-      }).onDuplicateKeyUpdate({ set: { id: 1 } });
-    }
-
-    console.log("✅ [Database] Inicialização concluída.");
-  } catch (error) {
-    console.error("❌ [Database] Erro durante a inicialização:", error);
-  }
-}
-
 async function startServer() {
-  await ensureDatabaseInitialized();
+  // ── Rodar migrations automaticamente ao iniciar ───────────────
+  if (process.env.DATABASE_URL) {
+    try {
+      console.log("[Migration] Conectando ao banco...");
+      const connection = await mysql.createConnection(process.env.DATABASE_URL);
+      const dbMigrate = drizzle(connection);
+      const __filename = fileURLToPath(import.meta.url);
+      const __dirname = path.dirname(__filename);
+      const migrationsFolder = path.join(__dirname, "../drizzle");
+      await migrate(dbMigrate, { migrationsFolder });
+      console.log("[Migration] ✅ Migrations aplicadas com sucesso!");
+      await connection.end();
+    } catch (err) {
+      console.error("[Migration] ❌ Erro ao rodar migrations (servidor vai continuar):", err);
+      // NÃO relança o erro — servidor deve subir mesmo se migration falhar
+    }
+  } else {
+    console.warn("[Migration] ⚠️ DATABASE_URL não definida, pulando migrations.");
+  }
+  // ─────────────────────────────────────────────────────────────
+
   const app = express();
   const server = createServer(app);
   app.use(express.json({ limit: "50mb" }));
