@@ -2,6 +2,11 @@ import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import net from "net";
+import { migrate } from "drizzle-orm/mysql2/migrator";
+import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
+import path from "path";
+import { fileURLToPath } from "url";
 import multer from "multer";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
@@ -41,6 +46,27 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function startServer() {
+  // ── Rodar migrations automaticamente ao iniciar ───────────────
+  if (process.env.DATABASE_URL) {
+    try {
+      console.log("[Migration] Conectando ao banco...");
+      const connection = await mysql.createConnection(process.env.DATABASE_URL);
+      const dbMigrate = drizzle(connection);
+      const __filename = fileURLToPath(import.meta.url);
+      const __dirname = path.dirname(__filename);
+      const migrationsFolder = path.join(__dirname, "../drizzle");
+      await migrate(dbMigrate, { migrationsFolder });
+      console.log("[Migration] ✅ Migrations aplicadas com sucesso!");
+      await connection.end();
+    } catch (err) {
+      console.error("[Migration] ❌ Erro ao rodar migrations (servidor vai continuar):", err);
+      // NÃO relança o erro — servidor deve subir mesmo se migration falhar
+    }
+  } else {
+    console.warn("[Migration] ⚠️ DATABASE_URL não definida, pulando migrations.");
+  }
+  // ─────────────────────────────────────────────────────────────
+
   const app = express();
   const server = createServer(app);
   app.use(express.json({ limit: "50mb" }));
