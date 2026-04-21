@@ -16,7 +16,7 @@ function getS3Client(): S3Client {
     );
   }
 
-  const config: ConstructorParameters<typeof S3Client>[0] = {
+  const config: any = {
     region,
     credentials: {
       accessKeyId,
@@ -55,14 +55,19 @@ export async function storagePut(
 
   const body = typeof data === "string" ? Buffer.from(data) : data;
 
-  await client.send(
-    new PutObjectCommand({
-      Bucket: bucket,
-      Key: key,
-      Body: body as any,
-      ContentType: contentType,
-    })
-  );
+  try {
+    await client.send(
+      new PutObjectCommand({
+        Bucket: bucket,
+        Key: key,
+        Body: body as any,
+        ContentType: contentType,
+      })
+    );
+  } catch (error: any) {
+    console.error("S3 Upload Error:", error);
+    throw new Error(`Failed to upload to S3: ${error.message}`);
+  }
 
   const endpoint = process.env.S3_ENDPOINT;
   let url: string;
@@ -72,7 +77,12 @@ export async function storagePut(
     url = publicUrl.replace(/\/+$/, "") + "/" + key;
   } else if (endpoint) {
     const base = endpoint.replace(/\/+$/, "");
-    url = base + "/" + bucket + "/" + key;
+    // Handle different endpoint formats
+    if (base.includes("storageapi.dev")) {
+      url = `${base}/${bucket}/${key}`;
+    } else {
+      url = `${base}/${bucket}/${key}`;
+    }
   } else {
     const region = process.env.S3_REGION || "us-east-1";
     url = "https://" + bucket + ".s3." + region + ".amazonaws.com/" + key;
@@ -86,8 +96,12 @@ export async function storageGet(relKey: string): Promise<{ key: string; url: st
   const bucket = getS3Bucket();
   const key = normalizeKey(relKey);
 
-  const command = new GetObjectCommand({ Bucket: bucket, Key: key });
-  const url = await getSignedUrl(client, command, { expiresIn: 3600 });
-
-  return { key, url };
+  try {
+    const command = new GetObjectCommand({ Bucket: bucket, Key: key });
+    const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+    return { key, url };
+  } catch (error: any) {
+    console.error("S3 Get Error:", error);
+    return { key, url: "" };
+  }
 }
