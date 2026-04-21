@@ -71,6 +71,10 @@ async function startServer() {
   const server = createServer(app);
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
+  
+  // Rota estática para servir arquivos de upload
+  app.use('/api/files', express.static(path.resolve(process.cwd(), 'uploads')));
+
   const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 50 * 1024 * 1024 } });
   registerOAuthRoutes(app);
 
