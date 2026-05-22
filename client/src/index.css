@@ -7,7 +7,7 @@
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 6px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -42,165 +42,177 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ─────────────────────────────────────────────────────────────
+   LIGHT MODE — branco limpo, alto contraste, azul Zeglam
+   ───────────────────────────────────────────────────────────── */
 :root {
-  --radius: 0.75rem;
+  --radius: 1rem;
 
-  /* Modo claro — fundo claro, texto navy, ouro como destaque */
-  --background: oklch(0.98 0.012 85);
-  --foreground: oklch(0.22 0.07 255);
+  --background: oklch(0.985 0.003 240);
+  --foreground: oklch(0.18 0.06 250);
 
-  --card: oklch(1 0.006 90);
-  --card-foreground: oklch(0.28 0.06 255);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.06 250);
 
-  --popover: oklch(1 0.006 90);
-  --popover-foreground: oklch(0.28 0.06 255);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.06 250);
 
-  --primary: oklch(0.58 0.11 78);
-  --primary-foreground: oklch(0.99 0.01 90);
+  /* Azul-céu vibrante — mais claro que o navy da logo */
+  --primary: oklch(0.55 0.18 248);
+  --primary-foreground: oklch(0.99 0.005 240);
 
-  --secondary: oklch(0.94 0.02 85);
-  --secondary-foreground: oklch(0.32 0.06 255);
+  --secondary: oklch(0.94 0.02 245);
+  --secondary-foreground: oklch(0.22 0.07 250);
 
-  --muted: oklch(0.94 0.015 85);
-  --muted-foreground: oklch(0.42 0.04 255);
+  --muted: oklch(0.94 0.015 245);
+  --muted-foreground: oklch(0.38 0.05 250);
 
-  --accent: oklch(0.92 0.03 78);
-  --accent-foreground: oklch(0.32 0.06 255);
+  /* Accent dourado — cor da marca */
+  --accent: oklch(0.90 0.08 85);
+  --accent-foreground: oklch(0.32 0.11 80);
 
-  --destructive: oklch(0.55 0.20 25);
-  --destructive-foreground: oklch(0.99 0.01 90);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.99 0.005 240);
 
-  --border: oklch(0.88 0.02 85);
-  --input: oklch(0.96 0.012 85);
-  --ring: oklch(0.58 0.11 78);
+  --border: oklch(0.86 0.02 245);
+  --input: oklch(1 0 0);
+  --ring: oklch(0.55 0.18 248);
 
-  --chart-1: oklch(0.58 0.11 78);
-  --chart-2: oklch(0.55 0.14 150);
-  --chart-3: oklch(0.55 0.12 220);
-  --chart-4: oklch(0.55 0.14 300);
-  --chart-5: oklch(0.55 0.14 30);
+  /* Charts — azul + dourado em variações */
+  --chart-1: oklch(0.60 0.17 245);  /* azul-céu primário */
+  --chart-2: oklch(0.72 0.13 85);   /* dourado da marca */
+  --chart-3: oklch(0.70 0.13 195);  /* azul-turquesa */
+  --chart-4: oklch(0.50 0.15 250);  /* navy médio */
+  --chart-5: oklch(0.65 0.15 30);   /* coral quente (apoio) */
 
-  --sidebar: oklch(0.97 0.012 85);
-  --sidebar-foreground: oklch(0.28 0.06 255);
-  --sidebar-primary: oklch(0.58 0.11 78);
-  --sidebar-primary-foreground: oklch(0.99 0.01 90);
-  --sidebar-accent: oklch(0.94 0.02 85);
-  --sidebar-accent-foreground: oklch(0.32 0.06 255);
-  --sidebar-border: oklch(0.88 0.02 85);
-  --sidebar-ring: oklch(0.58 0.11 78);
+  --sidebar: oklch(0.97 0.008 245);
+  --sidebar-foreground: oklch(0.22 0.06 250);
+  --sidebar-primary: oklch(0.55 0.18 248);
+  --sidebar-primary-foreground: oklch(0.99 0.005 240);
+  --sidebar-accent: oklch(0.93 0.025 245);
+  --sidebar-accent-foreground: oklch(0.22 0.07 250);
+  --sidebar-border: oklch(0.86 0.02 245);
+  --sidebar-ring: oklch(0.55 0.18 248);
 
-  --zeglam-navy: #1a3a6b;
-  --zeglam-navy-deep: #0f1e38;
-  --zeglam-gold: #9a8445;
-  --zeglam-gold-light: #b8a060;
+  /* ── Tokens "zeglam-*" — paleta oficial da marca ───────── */
+  --zeglam-navy: #1A3A6B;          /* navy da logo */
+  --zeglam-navy-deep: #0F2547;     /* navy mais profundo */
+  --zeglam-gold: #B8924A;          /* dourado mais escuro pra contraste */
+  --zeglam-gold-light: #C5A86A;    /* dourado da logo */
 
+  /* Fundo: branco quase puro, leve tom azul, sem gradiente colorido pesado */
   --zeglam-page-bg: linear-gradient(
-    165deg,
-    oklch(0.99 0.01 85) 0%,
-    oklch(0.96 0.02 78) 45%,
-    oklch(0.94 0.025 255) 100%
+    180deg,
+    oklch(0.985 0.003 240) 0%,
+    oklch(0.97 0.012 245) 100%
   );
   --zeglam-header-bg: linear-gradient(
     180deg,
-    oklch(1 0.008 90 / 0.95) 0%,
-    oklch(0.98 0.012 85 / 0.75) 100%
+    oklch(1 0 0 / 0.96) 0%,
+    oklch(1 0 0 / 0.82) 100%
   );
-  --zeglam-glass-bg: oklch(1 0.006 90 / 0.75);
-  --zeglam-glass-border: oklch(0.58 0.11 78 / 0.22);
-  --zeglam-stat-bg: oklch(1 0.006 90 / 0.9);
-  --zeglam-table-bg: oklch(1 0.006 90 / 0.85);
+  /* Painéis sólidos pra leitura clara */
+  --zeglam-glass-bg: oklch(1 0 0);
+  --zeglam-glass-border: oklch(0.86 0.02 245);
+  --zeglam-stat-bg: oklch(1 0 0);
+  --zeglam-table-bg: oklch(1 0 0);
   --zeglam-auth-bg: linear-gradient(
     145deg,
-    oklch(1 0.006 90) 0%,
-    oklch(0.97 0.015 85) 100%
+    oklch(1 0 0) 0%,
+    oklch(0.99 0.008 245) 100%
   );
-  --zeglam-orb-1: oklch(0.75 0.1 78 / 0.2);
-  --zeglam-orb-2: oklch(0.55 0.08 255 / 0.12);
-  --zeglam-orb-3: oklch(0.7 0.09 78 / 0.15);
-  --zeglam-scrollbar-track: #ebe8e0;
-  --zeglam-scrollbar-thumb: #c5baa0;
-  --zeglam-scrollbar-hover: #b8a060;
-  --zeglam-btn-ghost-hover: oklch(0.28 0.06 255 / 0.06);
-  --zeglam-btn-outline-bg: oklch(1 0 0 / 0.8);
-  --zeglam-text-rgb: 15, 30, 56;
+  /* Orbs muito sutis em modo claro */
+  --zeglam-orb-1: oklch(0.78 0.10 245 / 0.12);
+  --zeglam-orb-2: oklch(0.82 0.08 85 / 0.10);
+  --zeglam-orb-3: oklch(0.80 0.08 200 / 0.08);
+  --zeglam-scrollbar-track: oklch(0.94 0.012 245);
+  --zeglam-scrollbar-thumb: oklch(0.78 0.05 245);
+  --zeglam-scrollbar-hover: oklch(0.55 0.18 248);
+  --zeglam-btn-ghost-hover: oklch(0.55 0.18 248 / 0.08);
+  --zeglam-btn-outline-bg: oklch(1 0 0);
+  --zeglam-text-rgb: 22, 36, 71;
 }
 
+/* ─────────────────────────────────────────────────────────────
+   DARK MODE — navy Zeglam profundo, azul-céu brilhante, dourado
+   ───────────────────────────────────────────────────────────── */
 .dark {
-  --background: oklch(0.20 0.055 255);
-  --foreground: oklch(0.96 0.008 60);
+  --background: oklch(0.20 0.055 250);
+  --foreground: oklch(0.97 0.008 240);
 
-  --card: oklch(0.24 0.055 255);
-  --card-foreground: oklch(0.96 0.008 60);
+  --card: oklch(0.25 0.055 250);
+  --card-foreground: oklch(0.97 0.008 240);
 
-  --popover: oklch(0.24 0.055 255);
-  --popover-foreground: oklch(0.96 0.008 60);
+  --popover: oklch(0.25 0.055 250);
+  --popover-foreground: oklch(0.97 0.008 240);
 
-  --primary: oklch(0.70 0.09 78);
-  --primary-foreground: oklch(0.18 0.055 255);
+  /* Azul-céu mais claro que o navy de fundo */
+  --primary: oklch(0.75 0.14 235);
+  --primary-foreground: oklch(0.16 0.055 250);
 
-  --secondary: oklch(0.28 0.055 255);
-  --secondary-foreground: oklch(0.90 0.008 60);
+  --secondary: oklch(0.30 0.055 250);
+  --secondary-foreground: oklch(0.94 0.008 240);
 
-  --muted: oklch(0.27 0.05 255);
-  --muted-foreground: oklch(0.62 0.025 255);
+  --muted: oklch(0.28 0.05 250);
+  --muted-foreground: oklch(0.72 0.025 240);
 
-  --accent: oklch(0.30 0.055 255);
-  --accent-foreground: oklch(0.90 0.008 60);
+  --accent: oklch(0.32 0.08 85);
+  --accent-foreground: oklch(0.85 0.13 85);
 
-  --destructive: oklch(0.55 0.20 25);
-  --destructive-foreground: oklch(0.96 0.008 60);
+  --destructive: oklch(0.68 0.20 25);
+  --destructive-foreground: oklch(0.16 0.055 250);
 
-  --border: oklch(0.32 0.055 255);
-  --input: oklch(0.28 0.055 255);
-  --ring: oklch(0.70 0.09 78);
+  --border: oklch(0.34 0.055 250);
+  --input: oklch(0.28 0.055 250);
+  --ring: oklch(0.75 0.14 235);
 
-  --chart-1: oklch(0.70 0.09 78);
-  --chart-2: oklch(0.65 0.15 150);
-  --chart-3: oklch(0.65 0.12 220);
-  --chart-4: oklch(0.65 0.15 300);
-  --chart-5: oklch(0.65 0.15 30);
+  --chart-1: oklch(0.75 0.14 235);
+  --chart-2: oklch(0.78 0.13 85);
+  --chart-3: oklch(0.75 0.13 200);
+  --chart-4: oklch(0.65 0.12 260);
+  --chart-5: oklch(0.72 0.15 30);
 
-  --sidebar: oklch(0.18 0.055 255);
-  --sidebar-foreground: oklch(0.92 0.008 60);
-  --sidebar-primary: oklch(0.70 0.09 78);
-  --sidebar-primary-foreground: oklch(0.18 0.055 255);
-  --sidebar-accent: oklch(0.26 0.055 255);
-  --sidebar-accent-foreground: oklch(0.90 0.008 60);
-  --sidebar-border: oklch(0.30 0.055 255);
-  --sidebar-ring: oklch(0.70 0.09 78);
+  --sidebar: oklch(0.18 0.055 250);
+  --sidebar-foreground: oklch(0.92 0.012 240);
+  --sidebar-primary: oklch(0.75 0.14 235);
+  --sidebar-primary-foreground: oklch(0.18 0.055 250);
+  --sidebar-accent: oklch(0.28 0.055 250);
+  --sidebar-accent-foreground: oklch(0.92 0.012 240);
+  --sidebar-border: oklch(0.32 0.055 250);
+  --sidebar-ring: oklch(0.75 0.14 235);
 
-  --zeglam-gold: #b8a060;
-  --zeglam-gold-light: #d4b87a;
+  --zeglam-gold: #D9C089;
+  --zeglam-gold-light: #E8D4A8;
 
   --zeglam-page-bg: linear-gradient(
     165deg,
     var(--zeglam-navy-deep) 0%,
-    var(--zeglam-navy) 42%,
-    oklch(0.22 0.05 255) 100%
+    var(--zeglam-navy) 45%,
+    oklch(0.22 0.055 250) 100%
   );
   --zeglam-header-bg: linear-gradient(
     180deg,
-    oklch(0.18 0.055 255 / 0.95) 0%,
-    oklch(0.20 0.05 255 / 0.6) 100%
+    oklch(0.18 0.055 250 / 0.92) 0%,
+    oklch(0.20 0.055 250 / 0.6) 100%
   );
-  --zeglam-glass-bg: oklch(0.24 0.055 255 / 0.55);
-  --zeglam-glass-border: oklch(0.70 0.09 78 / 0.18);
-  --zeglam-stat-bg: oklch(0.24 0.055 255 / 0.7);
-  --zeglam-table-bg: oklch(0.22 0.05 255 / 0.65);
+  --zeglam-glass-bg: oklch(0.25 0.055 250 / 0.65);
+  --zeglam-glass-border: oklch(0.75 0.14 235 / 0.22);
+  --zeglam-stat-bg: oklch(0.25 0.055 250 / 0.78);
+  --zeglam-table-bg: oklch(0.22 0.055 250 / 0.72);
   --zeglam-auth-bg: linear-gradient(
     145deg,
-    oklch(0.28 0.055 255 / 0.92) 0%,
-    oklch(0.22 0.05 255 / 0.88) 100%
+    oklch(0.28 0.055 250 / 0.92) 0%,
+    oklch(0.22 0.055 250 / 0.88) 100%
   );
-  --zeglam-orb-1: oklch(0.70 0.09 78 / 0.18);
-  --zeglam-orb-2: oklch(0.45 0.1 255 / 0.22);
-  --zeglam-orb-3: oklch(0.65 0.08 78 / 0.12);
-  --zeglam-scrollbar-track: #0f2040;
-  --zeglam-scrollbar-thumb: #1e3a6b;
-  --zeglam-scrollbar-hover: #b8a060;
-  --zeglam-btn-ghost-hover: oklch(1 0 0 / 0.06);
-  --zeglam-btn-outline-bg: oklch(1 0 0 / 0.03);
-  --zeglam-text-rgb: 255, 255, 255;
+  --zeglam-orb-1: oklch(0.75 0.14 235 / 0.28);
+  --zeglam-orb-2: oklch(0.78 0.13 85 / 0.22);
+  --zeglam-orb-3: oklch(0.65 0.12 260 / 0.20);
+  --zeglam-scrollbar-track: oklch(0.22 0.055 250);
+  --zeglam-scrollbar-thumb: oklch(0.42 0.06 250);
+  --zeglam-scrollbar-hover: oklch(0.75 0.14 235);
+  --zeglam-btn-ghost-hover: oklch(1 0 0 / 0.08);
+  --zeglam-btn-outline-bg: oklch(1 0 0 / 0.04);
+  --zeglam-text-rgb: 248, 248, 255;
 }
 
 @layer base {
@@ -212,8 +224,8 @@
     font-family: "Plus Jakarta Sans", system-ui, sans-serif;
   }
   h1, h2, h3, .font-display {
-    font-family: "Source Serif 4", Georgia, serif;
-    font-weight: 600;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: -0.02em;
   }
   button:not(:disabled),
@@ -230,96 +242,109 @@
 }
 
 @layer components {
-  /**
-   * Custom container utility that centers content and adds responsive padding.
-   *
-   * This overrides Tailwind's default container behavior to:
-   * - Auto-center content (mx-auto)
-   * - Add responsive horizontal padding
-   * - Set max-width for large screens
-   *
-   * Usage: <div className="container">...</div>
-   *
-   * For custom widths, use max-w-* utilities directly:
-   * <div className="max-w-6xl mx-auto px-4">...</div>
-   */
+  /* Container */
   .container {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1rem; /* 16px - mobile padding */
+    padding-left: 1rem;
     padding-right: 1rem;
   }
-
   .flex {
     min-height: 0;
     min-width: 0;
   }
-
   @media (min-width: 640px) {
-    .container {
-      padding-left: 1.5rem; /* 24px - tablet padding */
-      padding-right: 1.5rem;
-    }
+    .container { padding-left: 1.5rem; padding-right: 1.5rem; }
   }
-
   @media (min-width: 1024px) {
-    .container {
-      padding-left: 2rem;
-      padding-right: 2rem;
-      max-width: 1400px;
-    }
+    .container { padding-left: 2rem; padding-right: 2rem; max-width: 1400px; }
   }
 
-  /* Status badge colors — Zeglam brand palette */
+  /* ── Status badges — cores vivas, alto contraste ───────── */
   .status-concluida {
-    background: oklch(0.30 0.09 150 / 0.30);
-    color: oklch(0.80 0.14 150);
-    border: 1px solid oklch(0.55 0.12 150 / 0.45);
+    background: oklch(0.94 0.10 165);
+    color: oklch(0.32 0.12 165);
+    border: 1px solid oklch(0.75 0.14 165 / 0.55);
+  }
+  .dark .status-concluida {
+    background: oklch(0.30 0.10 165 / 0.40);
+    color: oklch(0.84 0.14 165);
+    border-color: oklch(0.60 0.14 165 / 0.55);
   }
   .status-em-separacao {
-    background: oklch(0.30 0.09 220 / 0.30);
-    color: oklch(0.78 0.12 220);
-    border: 1px solid oklch(0.52 0.10 220 / 0.45);
+    background: oklch(0.94 0.08 240);
+    color: oklch(0.32 0.14 260);
+    border: 1px solid oklch(0.72 0.14 250 / 0.55);
+  }
+  .dark .status-em-separacao {
+    background: oklch(0.30 0.10 250 / 0.40);
+    color: oklch(0.82 0.14 250);
+    border-color: oklch(0.58 0.14 250 / 0.55);
   }
   .status-em-transito {
-    background: oklch(0.32 0.08 78 / 0.30);
-    color: oklch(0.75 0.09 78);
-    border: 1px solid oklch(0.55 0.08 78 / 0.45);
+    background: oklch(0.94 0.10 60);
+    color: oklch(0.36 0.14 50);
+    border: 1px solid oklch(0.74 0.16 55 / 0.55);
+  }
+  .dark .status-em-transito {
+    background: oklch(0.32 0.10 55 / 0.40);
+    color: oklch(0.84 0.16 55);
+    border-color: oklch(0.62 0.16 55 / 0.55);
   }
   .status-link-aberto {
-    background: oklch(0.30 0.09 255 / 0.35);
-    color: oklch(0.78 0.10 255);
-    border: 1px solid oklch(0.50 0.08 255 / 0.45);
+    background: oklch(0.93 0.08 275);
+    color: oklch(0.34 0.16 275);
+    border: 1px solid oklch(0.70 0.16 275 / 0.55);
+  }
+  .dark .status-link-aberto {
+    background: oklch(0.30 0.10 275 / 0.40);
+    color: oklch(0.84 0.16 275);
+    border-color: oklch(0.60 0.16 275 / 0.55);
   }
   .status-cancelado {
-    background: oklch(0.28 0.10 25 / 0.30);
-    color: oklch(0.72 0.14 25);
-    border: 1px solid oklch(0.50 0.12 25 / 0.45);
+    background: oklch(0.94 0.08 25);
+    color: oklch(0.36 0.18 25);
+    border: 1px solid oklch(0.72 0.18 25 / 0.55);
+  }
+  .dark .status-cancelado {
+    background: oklch(0.30 0.10 25 / 0.40);
+    color: oklch(0.82 0.18 25);
+    border-color: oklch(0.60 0.18 25 / 0.55);
   }
   .status-pendente {
-    background: oklch(0.32 0.09 45 / 0.30);
-    color: oklch(0.82 0.13 45);
-    border: 1px solid oklch(0.58 0.10 45 / 0.45);
+    background: oklch(0.95 0.10 85);
+    color: oklch(0.36 0.14 70);
+    border: 1px solid oklch(0.76 0.16 80 / 0.55);
+  }
+  .dark .status-pendente {
+    background: oklch(0.32 0.10 75 / 0.40);
+    color: oklch(0.86 0.16 80);
+    border-color: oklch(0.66 0.16 80 / 0.55);
   }
   .status-verificando {
-    background: oklch(0.30 0.09 300 / 0.30);
-    color: oklch(0.78 0.13 300);
-    border: 1px solid oklch(0.52 0.10 300 / 0.45);
+    background: oklch(0.93 0.08 320);
+    color: oklch(0.36 0.16 320);
+    border: 1px solid oklch(0.72 0.16 320 / 0.55);
+  }
+  .dark .status-verificando {
+    background: oklch(0.30 0.10 320 / 0.40);
+    color: oklch(0.84 0.16 320);
+    border-color: oklch(0.60 0.16 320 / 0.55);
   }
 
-  /* Zeglam Gold gradient text — #b8a060 */
+  /* Texto destaque — dourado da marca */
   .gold-text {
-    background: linear-gradient(135deg, #d4b87a, #b8a060, #9e8848);
+    background: linear-gradient(135deg, #E8D4A8, #C5A86A, #A68A4C);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--zeglam-scrollbar-track); }
-  ::-webkit-scrollbar-thumb { background: var(--zeglam-scrollbar-thumb); border-radius: 3px; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--zeglam-scrollbar-track); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb { background: var(--zeglam-scrollbar-thumb); border-radius: 999px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--zeglam-scrollbar-hover); }
 
   .theme-toggle {
@@ -327,33 +352,26 @@
     background: var(--zeglam-glass-bg);
     color: var(--foreground);
     backdrop-filter: blur(10px);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
   }
   .theme-toggle:hover {
-    border-color: oklch(0.58 0.11 78 / 0.45);
-    box-shadow: 0 4px 16px oklch(0.58 0.11 78 / 0.15);
+    border-color: var(--primary);
+    box-shadow: 0 6px 20px oklch(0.60 0.17 245 / 0.18);
+    transform: translateY(-1px);
   }
 
-  /* Alert pulse */
+  /* Alerta */
   @keyframes alert-pulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
+    50% { opacity: 0.55; }
   }
-  .alert-overdue { animation: alert-pulse 2s ease-in-out infinite; color: oklch(0.70 0.15 25); }
-  .alert-soon { color: oklch(0.80 0.15 45); }
+  .alert-overdue { animation: alert-pulse 2s ease-in-out infinite; color: oklch(0.62 0.22 25); }
+  .alert-soon { color: oklch(0.72 0.18 60); }
 
-  /* ── Animations ─────────────────────────────────────────── */
+  /* ── Animações ─────────────────────────────────────────── */
   @keyframes float-orb {
-    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
-    50% { transform: translate(24px, -20px) scale(1.08); opacity: 0.75; }
-  }
-  @keyframes shine-sweep {
-    0% { transform: translateX(-120%) skewX(-12deg); }
-    100% { transform: translateX(220%) skewX(-12deg); }
-  }
-  @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px oklch(0.70 0.09 78 / 0.2); }
-    50% { box-shadow: 0 0 32px oklch(0.70 0.09 78 / 0.45); }
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.55; }
+    50% { transform: translate(28px, -22px) scale(1.1); opacity: 0.85; }
   }
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(16px); }
@@ -364,286 +382,351 @@
     100% { background-position: 200% 0; }
   }
 
-  /* Page atmosphere */
+  /* Fundo da página — gradiente colorido suave */
   .zeglam-page {
     background: var(--zeglam-page-bg);
     transition: background 0.35s ease;
+    min-height: 100vh;
   }
   .zeglam-page-glow {
     background:
       radial-gradient(ellipse 80% 50% at 50% -10%, var(--zeglam-orb-1), transparent 55%),
-      radial-gradient(ellipse 40% 30% at 100% 50%, var(--zeglam-orb-2), transparent 50%),
-      radial-gradient(ellipse 35% 25% at 0% 80%, var(--zeglam-orb-3), transparent 45%);
+      radial-gradient(ellipse 45% 35% at 100% 50%, var(--zeglam-orb-2), transparent 55%),
+      radial-gradient(ellipse 40% 30% at 0% 80%, var(--zeglam-orb-3), transparent 50%);
     transition: opacity 0.35s ease;
   }
-  :root .zeglam-page-glow { opacity: 0.85; }
+  :root .zeglam-page-glow { opacity: 0.5; }
   .dark .zeglam-page-glow { opacity: 1; }
   .zeglam-orb {
     border-radius: 50%;
-    filter: blur(72px);
-    animation: float-orb 9s ease-in-out infinite;
+    filter: blur(80px);
+    animation: float-orb 10s ease-in-out infinite;
   }
   .zeglam-orb-1 {
-    width: 280px; height: 280px;
-    top: -80px; left: 10%;
+    width: 320px; height: 320px;
+    top: -100px; left: 8%;
     background: var(--zeglam-orb-1);
     animation-delay: 0s;
   }
   .zeglam-orb-2 {
-    width: 200px; height: 200px;
-    top: 40%; right: -40px;
+    width: 240px; height: 240px;
+    top: 40%; right: -60px;
     background: var(--zeglam-orb-2);
     animation-delay: -3s;
-    animation-duration: 11s;
+    animation-duration: 12s;
   }
   .zeglam-orb-3 {
-    width: 160px; height: 160px;
-    bottom: 10%; left: 20%;
+    width: 200px; height: 200px;
+    bottom: 8%; left: 22%;
     background: var(--zeglam-orb-3);
     animation-delay: -5s;
-    animation-duration: 13s;
-  }
-  .zeglam-header {
-    background: var(--zeglam-header-bg);
-    border-bottom: 1px solid var(--zeglam-glass-border);
-    backdrop-filter: blur(16px) saturate(1.2);
-    -webkit-backdrop-filter: blur(16px) saturate(1.2);
-    transition: background 0.35s ease, border-color 0.35s ease;
-  }
-  .zeglam-auth-card {
-    background: var(--zeglam-auth-bg);
-    backdrop-filter: blur(20px);
-    box-shadow:
-      0 0 0 1px var(--zeglam-glass-border),
-      0 24px 48px oklch(0 0 0 / 0.12),
-      inset 0 1px 0 oklch(1 0 0 / 0.08);
-  }
-  .dark .zeglam-auth-card {
-    box-shadow:
-      0 0 0 1px var(--zeglam-glass-border),
-      0 24px 48px oklch(0 0 0 / 0.35),
-      inset 0 1px 0 oklch(1 0 0 / 0.06);
-  }
-  .zeglam-glass-panel {
-    @apply rounded-2xl border p-3 md:p-4;
-    background: var(--zeglam-glass-bg);
-    border-color: var(--zeglam-glass-border);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px oklch(0 0 0 / 0.08), inset 0 1px 0 oklch(1 0 0 / 0.06);
-    transition: background 0.35s ease, border-color 0.35s ease;
-  }
-  .dark .zeglam-glass-panel {
-    box-shadow: 0 8px 32px oklch(0 0 0 / 0.2), inset 0 1px 0 oklch(1 0 0 / 0.04);
+    animation-duration: 14s;
   }
 
-  /* ── Buttons ─────────────────────────────────────────────── */
+  .zeglam-header {
+    background: var(--zeglam-header-bg);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.35s ease, border-color 0.35s ease;
+  }
+  .dark .zeglam-header {
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  }
+
+  .zeglam-auth-card {
+    background: var(--zeglam-auth-bg);
+    border-radius: 1.5rem;
+    border: 1px solid var(--border);
+    box-shadow:
+      0 24px 48px -16px oklch(0.55 0.18 248 / 0.18),
+      0 4px 16px oklch(0 0 0 / 0.06);
+  }
+  .dark .zeglam-auth-card {
+    backdrop-filter: blur(24px);
+    border-color: var(--zeglam-glass-border);
+    box-shadow:
+      0 0 0 1px var(--zeglam-glass-border),
+      0 32px 64px -16px oklch(0 0 0 / 0.45),
+      inset 0 1px 0 oklch(1 0 0 / 0.06);
+  }
+
+  .zeglam-glass-panel {
+    @apply rounded-2xl border p-4 md:p-5;
+    background: var(--zeglam-glass-bg);
+    border-color: var(--zeglam-glass-border);
+    box-shadow: 0 4px 16px -4px oklch(0.55 0.18 248 / 0.08), 0 1px 3px oklch(0 0 0 / 0.04);
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+  .zeglam-glass-panel:hover {
+    box-shadow: 0 8px 24px -6px oklch(0.55 0.18 248 / 0.15), 0 2px 6px oklch(0 0 0 / 0.06);
+  }
+  .dark .zeglam-glass-panel {
+    backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px oklch(0 0 0 / 0.25), inset 0 1px 0 oklch(1 0 0 / 0.04);
+  }
+
+  /* ── Botões — vibrantes e amigáveis ─────────────────────── */
   .zeglam-btn {
     @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl font-semibold;
     @apply outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50;
     @apply disabled:pointer-events-none disabled:opacity-50;
-    transition: box-shadow 0.25s ease, filter 0.2s ease;
+    transition: box-shadow 0.25s ease, transform 0.15s ease, filter 0.2s ease, background 0.25s ease;
   }
-  .zeglam-btn-sm { @apply h-8 px-3 text-xs; }
-  .zeglam-btn-md { @apply h-10 px-5 text-sm; }
-  .zeglam-btn-lg { @apply h-12 px-7 text-base; }
+  .zeglam-btn-sm { @apply h-9 px-3.5 text-xs; }
+  .zeglam-btn-md { @apply h-11 px-5 text-sm; }
+  .zeglam-btn-lg { @apply h-13 px-7 text-base; }
 
+  /* Shine sweep removido — design mais sóbrio. Mantém o elemento sem efeito. */
   .zeglam-btn-shine {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      105deg,
-      transparent 35%,
-      oklch(1 0 0 / 0.35) 50%,
-      transparent 65%
-    );
-    transform: translateX(-120%) skewX(-12deg);
-    pointer-events: none;
-  }
-  .zeglam-btn-primary:not(:disabled):hover .zeglam-btn-shine {
-    animation: shine-sweep 0.65s ease forwards;
+    display: none;
   }
 
   .zeglam-btn-primary {
-    background: linear-gradient(135deg, var(--zeglam-gold-light) 0%, var(--zeglam-gold) 50%, #9a8445 100%);
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%);
     background-size: 200% auto;
-    color: var(--zeglam-navy-deep);
-    border: 1px solid oklch(0.78 0.08 78 / 0.55);
+    color: white;
+    border: 1px solid oklch(0.60 0.17 245 / 0.4);
     box-shadow:
-      0 4px 0 oklch(0.55 0.08 78 / 0.35),
-      0 8px 28px oklch(0.70 0.09 78 / 0.3);
+      0 1px 0 oklch(1 0 0 / 0.2) inset,
+      0 8px 20px -4px oklch(0.55 0.18 245 / 0.45);
   }
   .zeglam-btn-primary:not(:disabled):hover {
     background-position: right center;
+    transform: translateY(-1px);
     box-shadow:
-      0 2px 0 oklch(0.55 0.08 78 / 0.35),
-      0 12px 36px oklch(0.70 0.09 78 / 0.45);
-    animation: pulse-glow 2s ease-in-out infinite;
+      0 1px 0 oklch(1 0 0 / 0.25) inset,
+      0 12px 28px -4px oklch(0.55 0.18 245 / 0.55);
+  }
+  .zeglam-btn-primary:not(:disabled):active {
+    transform: translateY(0);
   }
 
   .zeglam-btn-secondary {
-    background: oklch(0.28 0.055 255 / 0.9);
-    color: var(--zeglam-gold-light);
-    border: 1px solid oklch(0.70 0.09 78 / 0.35);
-    box-shadow: 0 4px 16px oklch(0 0 0 / 0.2);
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 2px oklch(0 0 0 / 0.04);
   }
   .zeglam-btn-secondary:not(:disabled):hover {
-    border-color: oklch(0.70 0.09 78 / 0.55);
-    background: oklch(0.32 0.055 255);
-    box-shadow: 0 6px 24px oklch(0.70 0.09 78 / 0.15);
+    background: var(--accent);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-1px);
   }
 
   .zeglam-btn-ghost {
     background: transparent;
-    color: oklch(0.85 0.02 60);
+    color: var(--foreground);
     border: 1px solid transparent;
   }
   .zeglam-btn-ghost:not(:disabled):hover {
     background: var(--zeglam-btn-ghost-hover);
-    border-color: var(--zeglam-glass-border);
     color: var(--primary);
   }
 
   .zeglam-btn-outline {
     background: var(--zeglam-btn-outline-bg);
     color: var(--foreground);
-    border: 1px solid var(--zeglam-glass-border);
+    border: 1.5px solid var(--border);
   }
   .zeglam-btn-outline:not(:disabled):hover {
-    background: oklch(0.58 0.11 78 / 0.12);
-    border-color: oklch(0.58 0.11 78 / 0.45);
+    background: oklch(0.60 0.17 245 / 0.08);
+    border-color: var(--primary);
     color: var(--primary);
-  }
-  .dark .zeglam-btn-outline:not(:disabled):hover {
-    background: oklch(0.70 0.09 78 / 0.1);
-    color: var(--zeglam-gold-light);
+    transform: translateY(-1px);
   }
 
   .zeglam-btn-danger {
-    background: linear-gradient(135deg, oklch(0.55 0.18 25), oklch(0.48 0.2 25));
+    background: linear-gradient(135deg, #FB7185 0%, #F43F5E 50%, #E11D48 100%);
     color: white;
-    border: 1px solid oklch(0.6 0.15 25 / 0.5);
-    box-shadow: 0 4px 20px oklch(0.5 0.2 25 / 0.3);
+    border: 1px solid oklch(0.62 0.22 25 / 0.4);
+    box-shadow: 0 8px 20px -4px oklch(0.62 0.22 25 / 0.4);
+  }
+  .zeglam-btn-danger:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px -4px oklch(0.62 0.22 25 / 0.5);
   }
 
-  /* Legacy alias */
   a.zeglam-btn-primary { @apply inline-flex items-center justify-center no-underline; }
 
+  /* ── Stat cards — coloridos, com hover suave ───────────── */
   .zeglam-stat-card {
-    @apply rounded-2xl border p-3 text-center;
+    @apply rounded-2xl border p-4 text-center;
     background: var(--zeglam-stat-bg);
-    border-color: var(--zeglam-glass-border);
-    backdrop-filter: blur(8px);
+    border-color: var(--border);
+    box-shadow: 0 1px 3px oklch(0 0 0 / 0.04);
     transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), background 0.35s ease;
   }
+  .dark .zeglam-stat-card {
+    backdrop-filter: blur(10px);
+  }
   .zeglam-stat-card:hover {
-    border-color: oklch(0.70 0.09 78 / 0.4);
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 32px oklch(0 0 0 / 0.3), 0 0 24px oklch(0.70 0.09 78 / 0.08);
+    border-color: var(--primary);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px -8px oklch(0.55 0.18 248 / 0.18);
   }
   .zeglam-stat-card.is-active {
-    border-color: oklch(0.70 0.09 78 / 0.6);
+    border-color: var(--primary);
+    background: linear-gradient(135deg, oklch(0.60 0.17 245 / 0.08), oklch(0.72 0.13 85 / 0.08));
     box-shadow:
-      0 0 0 1px oklch(0.70 0.09 78 / 0.25),
-      0 12px 36px oklch(0.70 0.09 78 / 0.15);
+      0 0 0 1px var(--primary),
+      0 16px 36px -10px oklch(0.60 0.17 245 / 0.22);
     transform: translateY(-2px);
   }
 
-  /* Shell visual + scroll interno evita cortar colunas no canto arredondado */
+  /* ── Tabela ─────────────────────────────────────────────── */
   .zeglam-table-wrap {
-    @apply w-full min-w-0 max-w-full rounded-2xl border-2;
-    border-color: oklch(0.58 0.11 78 / 0.2);
+    @apply w-full min-w-0 max-w-full rounded-2xl border;
+    border-color: var(--border);
     background: var(--zeglam-table-bg);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 16px 40px oklch(0 0 0 / 0.08);
+    box-shadow: 0 1px 3px oklch(0 0 0 / 0.04), 0 4px 16px -8px oklch(0.55 0.18 248 / 0.10);
     transition: background 0.35s ease;
+    overflow: hidden;
   }
   .dark .zeglam-table-wrap {
-    border-color: oklch(0.70 0.09 78 / 0.22);
-    box-shadow: 0 16px 40px oklch(0 0 0 / 0.35);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 16px 40px oklch(0 0 0 / 0.30);
   }
   .zeglam-table-scroll {
-    @apply w-full min-w-0 overflow-x-scroll overflow-y-visible;
+    @apply w-full min-w-0 overflow-x-auto overflow-y-visible;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
-    scrollbar-gutter: stable both-edges;
-    padding-right: 1.25rem;
+    scrollbar-gutter: auto;
     padding-bottom: 2px;
   }
-  .zeglam-table-scroll::-webkit-scrollbar {
-    height: 12px;
-  }
+  .zeglam-table-scroll::-webkit-scrollbar { height: 12px; }
   .zeglam-table-scroll::-webkit-scrollbar-thumb {
     border-radius: 999px;
-    background: oklch(0.58 0.11 78 / 0.55);
+    background: oklch(0.60 0.17 245 / 0.40);
   }
   .zeglam-table-scroll::-webkit-scrollbar-track {
     margin-inline: 0.5rem;
-    background: oklch(0.55 0.04 255 / 0.1);
+    background: oklch(0.60 0.17 245 / 0.06);
     border-radius: 999px;
   }
   .dark .zeglam-table-scroll::-webkit-scrollbar-thumb {
-    background: oklch(0.70 0.09 78 / 0.5);
+    background: oklch(0.75 0.14 235 / 0.40);
   }
   .zeglam-table-scroll-hint {
     @apply border-t border-border/60 px-4 py-2 text-center text-xs text-muted-foreground;
-    background: oklch(0.55 0.04 255 / 0.04);
+    background: oklch(0.60 0.17 245 / 0.04);
   }
   .dark .zeglam-table-scroll-hint {
     background: oklch(0 0 0 / 0.15);
   }
-  .cronograma-table--admin {
-    width: max-content;
-    min-width: 100%;
+  /* Admin: tabela densa que cabe na tela sem scroll horizontal */
+  .cronograma-table--compact {
+    width: 100%;
+    min-width: 0;
+    table-layout: auto;
+    border-spacing: 0;
   }
+  .cronograma-table--compact .cronograma-row .cronograma-td {
+    border-radius: 0;
+  }
+  .cronograma-table--compact thead .cronograma-th:first-child {
+    border-top-left-radius: 0.875rem;
+  }
+  .cronograma-table--compact thead .cronograma-th:last-child {
+    border-top-right-radius: 0.875rem;
+  }
+  .cronograma-table--compact .cronograma-th {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    white-space: normal;
+    line-height: 1.25;
+  }
+  .cronograma-table--compact .cronograma-td {
+    padding: 0.5rem 0.5rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    min-height: 0;
+    white-space: normal;
+    word-break: break-word;
+  }
+  .cronograma-table--compact .cronograma-td > * {
+    line-height: 1.4;
+  }
+  .cronograma-table--compact .cronograma-td--nome {
+    min-width: 0;
+    max-width: none;
+  }
+  .cronograma-table--compact .cronograma-name {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+  /* Coluna ações compacta — sem width fixa pra não sobrar espaço */
   .cronograma-th--acoes,
   .cronograma-td--acoes {
-    min-width: 6.5rem;
-    padding-right: 1.75rem !important;
+    min-width: 4.5rem;
+    padding-right: 0.5rem !important;
+    text-align: center;
     white-space: nowrap;
   }
-  .cronograma-th--acoes {
-    text-align: center;
+  /* Quando a tabela cabe, não reserva gutter de scrollbar */
+  .zeglam-table-scroll:has(.cronograma-table--compact) {
+    overflow-x: visible;
+    padding-bottom: 0;
   }
+  @media (max-width: 1023px) {
+    .zeglam-table-scroll:has(.cronograma-table--compact) {
+      overflow-x: auto;
+    }
+  }
+  .cronograma-table--compact tbody .cronograma-td:first-child { padding-left: 0.75rem; }
+  .cronograma-table--compact tbody .cronograma-td:last-child { padding-right: 0.75rem; }
+  /* Em telas largas, fonte um pouco maior */
+  @media (min-width: 1280px) {
+    .cronograma-table--compact .cronograma-th { font-size: 0.7rem; padding: 0.85rem 0.65rem; }
+    .cronograma-table--compact .cronograma-td { font-size: 0.875rem; padding: 0.65rem 0.65rem; }
+  }
+
   .zeglam-field-label {
-    @apply mb-2 block text-sm font-medium text-foreground/90;
+    @apply mb-2 block text-sm font-semibold text-foreground;
   }
+
   .zeglam-card-mobile {
-    @apply rounded-2xl border-2 p-5 backdrop-blur-md transition-all duration-300;
-    background: var(--zeglam-glass-bg);
-    border-color: oklch(0.55 0.04 255 / 0.15);
-    box-shadow: 0 2px 8px oklch(0 0 0 / 0.04);
+    @apply rounded-2xl border p-5 transition-all duration-300;
+    background: var(--card);
+    border-color: var(--border);
+    box-shadow: 0 1px 3px oklch(0 0 0 / 0.04), 0 2px 8px -4px oklch(0.55 0.18 248 / 0.08);
   }
   .dark .zeglam-card-mobile {
-    border-color: oklch(0.70 0.09 78 / 0.18);
-    box-shadow: 0 2px 12px oklch(0 0 0 / 0.2);
+    border-color: oklch(0.34 0.055 250);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 16px oklch(0 0 0 / 0.20);
   }
   .zeglam-card-mobile + .zeglam-card-mobile {
     margin-top: 1rem;
   }
+  .zeglam-card-mobile:hover {
+    border-color: var(--primary);
+    box-shadow: 0 12px 32px -8px oklch(0.60 0.17 245 / 0.22);
+    transform: translateY(-2px);
+  }
 
-  /* Cronograma — linhas largas, fáceis de escanear */
+  /* ── Cronograma — linhas largas, fáceis de escanear ───── */
   .cronograma-table {
     border-collapse: separate;
     border-spacing: 0 0.5rem;
   }
   .cronograma-th {
     @apply px-6 py-5 text-left text-xs font-bold uppercase tracking-wider whitespace-nowrap select-none;
-    background: var(--zeglam-navy-deep);
-    color: var(--zeglam-gold-light);
-    border-bottom: 2px solid oklch(0.58 0.11 78 / 0.45);
-    box-shadow: 0 2px 8px oklch(0 0 0 / 0.15);
+    background: linear-gradient(135deg, var(--zeglam-navy) 0%, var(--zeglam-navy-deep) 100%);
+    color: white;
+    border-bottom: 2px solid oklch(0.60 0.17 245 / 0.55);
+    box-shadow: 0 2px 8px oklch(0.60 0.17 245 / 0.20);
   }
   .dark .cronograma-th {
-    border-bottom-color: oklch(0.70 0.09 78 / 0.35);
+    border-bottom-color: oklch(0.75 0.14 235 / 0.45);
   }
   .cronograma-td {
     @apply px-6 py-5 text-base leading-[1.75] text-foreground align-middle;
     min-height: 4.75rem;
-    border-bottom: 1px solid oklch(0.55 0.04 255 / 0.12);
+    border-bottom: 1px solid var(--border);
   }
-  .cronograma-td > * {
-    @apply leading-[1.75];
-  }
+  .cronograma-td > * { @apply leading-[1.75]; }
   .cronograma-td--nome {
     min-width: 14rem;
     max-width: 22rem;
@@ -654,59 +737,49 @@
     word-break: break-word;
   }
   .cronograma-row .cronograma-td:first-child {
-    border-top-left-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
+    border-top-left-radius: 0.75rem;
+    border-bottom-left-radius: 0.75rem;
   }
-  .cronograma-table:not(.cronograma-table--admin) .cronograma-row .cronograma-td:last-child {
-    border-top-right-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
+  .cronograma-table:not(.cronograma-table--compact) .cronograma-row .cronograma-td:last-child {
+    border-top-right-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
   }
-  .dark .cronograma-td {
-    border-bottom-color: oklch(0.70 0.09 78 / 0.14);
-  }
-  /* Zebra — contraste visível */
+  /* Zebra com contraste visível */
   .cronograma-row {
-    background: oklch(1 0.006 90);
+    background: oklch(1 0 0);
     transition: background 0.15s ease, box-shadow 0.15s ease;
   }
   .cronograma-row:nth-child(even) {
-    background: oklch(0.94 0.018 85);
+    background: oklch(0.96 0.018 245);
   }
   .dark .cronograma-row {
-    background: oklch(0.19 0.05 255);
+    background: oklch(0.23 0.055 250);
   }
   .dark .cronograma-row:nth-child(even) {
-    background: oklch(0.26 0.055 255);
+    background: oklch(0.27 0.055 250);
   }
   .cronograma-row:hover {
-    background: oklch(0.90 0.04 78 / 0.35) !important;
-    box-shadow: inset 4px 0 0 var(--zeglam-gold);
+    background: oklch(0.92 0.05 245) !important;
+    box-shadow: inset 4px 0 0 var(--primary);
   }
   .dark .cronograma-row:hover {
-    background: oklch(0.30 0.06 255) !important;
-    box-shadow: inset 4px 0 0 var(--zeglam-gold-light);
+    background: oklch(0.32 0.06 250) !important;
+    box-shadow: inset 4px 0 0 var(--primary);
   }
   .cronograma-row:hover .cronograma-td {
-    border-bottom-color: oklch(0.58 0.11 78 / 0.25);
-  }
-  .dark .cronograma-row:hover .cronograma-td {
-    border-bottom-color: oklch(0.70 0.09 78 / 0.28);
+    border-bottom-color: oklch(0.60 0.17 245 / 0.25);
   }
   .cronograma-row.ring-primary\/40 {
-    background: oklch(0.58 0.11 78 / 0.12) !important;
+    background: oklch(0.60 0.17 245 / 0.10) !important;
   }
   .dark .cronograma-row.ring-primary\/40 {
-    background: oklch(0.70 0.09 78 / 0.14) !important;
+    background: oklch(0.75 0.14 235 / 0.16) !important;
   }
-  /* Última linha — borda de fechamento */
   .cronograma-table tbody tr:last-child .cronograma-td {
-    border-bottom: 1px solid oklch(0.55 0.04 255 / 0.2);
-  }
-  .dark .cronograma-table tbody tr:last-child .cronograma-td {
-    border-bottom-color: oklch(0.70 0.09 78 / 0.2);
+    border-bottom: 1px solid var(--border);
   }
   .cronograma-num {
-    @apply font-mono text-sm font-medium text-primary;
+    @apply font-mono text-sm font-semibold text-primary;
   }
   .cronograma-name {
     @apply block py-0.5 text-base font-semibold leading-[1.75] text-foreground;
@@ -714,17 +787,13 @@
   .cronograma-cell {
     @apply text-base leading-[1.75] text-foreground/85;
   }
-  .cronograma-table tbody .cronograma-td:first-child {
-    padding-left: 1.5rem;
-  }
-  .cronograma-table tbody .cronograma-td:last-child {
-    padding-right: 1.5rem;
-  }
+  .cronograma-table tbody .cronograma-td:first-child { padding-left: 1.5rem; }
+  .cronograma-table tbody .cronograma-td:last-child { padding-right: 1.5rem; }
   .cronograma-label {
-    @apply text-xs font-medium text-primary/90;
+    @apply text-xs font-semibold text-primary/90;
   }
   .cronograma-empty {
-    @apply text-muted-foreground/45;
+    @apply text-muted-foreground/50;
   }
   .cronograma-muted {
     @apply text-sm text-muted-foreground;
@@ -733,7 +802,7 @@
     @apply border-t border-border bg-secondary/50;
   }
   .cronograma-skeleton {
-    @apply rounded bg-muted animate-pulse;
+    @apply rounded-lg bg-muted animate-pulse;
   }
   .cronograma-date-ok {
     @apply text-emerald-700 dark:text-emerald-400;
@@ -742,23 +811,33 @@
     @apply text-amber-700 dark:text-amber-400;
   }
   .cronograma-date-danger {
-    @apply text-red-700 dark:text-red-400;
+    @apply text-rose-700 dark:text-rose-400;
   }
   .cronograma-date-badge-ok {
-    @apply rounded px-1.5 py-0.5 text-xs text-emerald-700 bg-emerald-500/15 dark:text-emerald-400;
+    @apply rounded-lg px-2 py-0.5 text-xs font-semibold text-emerald-700 bg-emerald-500/15 dark:text-emerald-400;
   }
   .cronograma-date-badge-warn {
-    @apply rounded px-1.5 py-0.5 text-xs text-amber-800 bg-amber-500/15 dark:text-amber-400;
+    @apply rounded-lg px-2 py-0.5 text-xs font-semibold text-amber-800 bg-amber-500/15 dark:text-amber-400;
   }
   .cronograma-date-badge-danger {
-    @apply rounded px-1.5 py-0.5 text-xs font-bold text-red-700 bg-red-500/15 dark:text-red-400;
+    @apply rounded-lg px-2 py-0.5 text-xs font-bold text-rose-700 bg-rose-500/15 dark:text-rose-400;
   }
   .cronograma-stat-value {
-    @apply text-xl font-bold md:text-2xl text-foreground;
-    font-family: "Source Serif 4", Georgia, serif;
+    @apply text-2xl font-bold md:text-3xl text-foreground;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    letter-spacing: -0.02em;
   }
   .cronograma-stat-value.is-total {
-    @apply text-primary;
+    background: linear-gradient(135deg, #2563EB, #1A3A6B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .dark .cronograma-stat-value.is-total {
+    background: linear-gradient(135deg, #93C5FD, #D9C089);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
   .cronograma-input-surface {
     background: var(--input) !important;
@@ -770,10 +849,107 @@
     border-color: var(--border) !important;
     color: var(--popover-foreground) !important;
   }
-  .zeglam-card-mobile:hover {
-    border-color: oklch(0.70 0.09 78 / 0.3);
-    box-shadow: 0 8px 28px oklch(0 0 0 / 0.22);
-    transform: translateY(-2px);
+
+  /* ── Checkboxes nativos — visual moderno ──────────────── */
+  input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    border: 1.5px solid var(--border);
+    border-radius: 0.375rem;
+    background: var(--input);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+    flex-shrink: 0;
+  }
+  input[type="checkbox"]:hover:not(:disabled) {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px oklch(0.60 0.17 245 / 0.12);
+  }
+  input[type="checkbox"]:focus-visible {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px oklch(0.60 0.17 245 / 0.25);
+  }
+  input[type="checkbox"]:checked {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    border-color: #2563EB;
+  }
+  input[type="checkbox"]:checked::after {
+    content: "";
+    width: 0.4rem;
+    height: 0.7rem;
+    border: solid white;
+    border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  input[type="checkbox"]:indeterminate {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    border-color: #2563EB;
+  }
+  input[type="checkbox"]:indeterminate::after {
+    content: "";
+    width: 0.65rem;
+    height: 2.5px;
+    background: white;
+    border-radius: 2px;
+  }
+  input[type="checkbox"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .dark input[type="checkbox"] {
+    background: oklch(0.28 0.055 250);
+    border-color: oklch(0.45 0.06 250);
+  }
+  .dark input[type="checkbox"]:hover:not(:disabled) {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px oklch(0.75 0.14 235 / 0.18);
+  }
+  .dark input[type="checkbox"]:checked,
+  .dark input[type="checkbox"]:indeterminate {
+    background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+    border-color: #60A5FA;
+  }
+
+  /* Radio buttons no mesmo estilo */
+  input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    background: var(--input);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    flex-shrink: 0;
+  }
+  input[type="radio"]:hover:not(:disabled) {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px oklch(0.60 0.17 245 / 0.12);
+  }
+  input[type="radio"]:checked {
+    border-color: var(--primary);
+  }
+  input[type="radio"]:checked::after {
+    content: "";
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--primary);
+  }
+  .dark input[type="radio"] {
+    background: oklch(0.28 0.055 250);
+    border-color: oklch(0.45 0.06 250);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -781,7 +957,7 @@
     .zeglam-btn-primary:not(:disabled):hover,
     .zeglam-stat-card:hover {
       animation: none !important;
+      transform: none !important;
     }
-    .zeglam-btn-shine { display: none; }
   }
 }

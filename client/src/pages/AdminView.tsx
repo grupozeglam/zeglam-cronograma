@@ -963,39 +963,43 @@ export default function AdminView() {
               <Button onClick={() => setLocation('/')} variant="ghost" className="text-muted-foreground hover:text-foreground">
                 <ChevronLeft className="w-5 h-5" />
               </Button>
-              <a href="/" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-white/5"
-                style={{ color: "rgba(var(--zeglam-text-rgb),0.5)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <Eye className="w-3.5 h-3.5" /> Visualização Pública
+              <a href="/" className="flex items-center gap-1.5 px-2 lg:px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-primary/10 border border-border text-muted-foreground"
+                title="Visualização Pública">
+                <Eye className="w-4 h-4" /> <span className="hidden lg:inline">Visualização Pública</span>
               </a>
               <Button variant="ghost" size="sm" onClick={() => setShowStatusMgr(true)}
-                className="text-xs gap-1.5" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)", border: "1px solid rgba(184,160,96,0.2)" }}>
-                <Palette className="w-3.5 h-3.5" style={{ color: "#b8a060" }} /> Status
+                className="text-xs gap-1.5 border border-border text-muted-foreground hover:bg-primary/10"
+                title="Status">
+                <Palette className="w-4 h-4 text-primary" /> <span className="hidden lg:inline">Status</span>
               </Button>
 
               <Button variant="ghost" size="sm" onClick={() => setShowDeptMgr(true)}
-                className="text-xs gap-1.5" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)", border: "1px solid rgba(184,160,96,0.2)" }}>
-                <Settings className="w-3.5 h-3.5" style={{ color: "#b8a060" }} /> Departamentos
+                className="text-xs gap-1.5 border border-border text-muted-foreground hover:bg-primary/10"
+                title="Departamentos">
+                <Settings className="w-4 h-4 text-primary" /> <span className="hidden lg:inline">Departamentos</span>
               </Button>
-                 <a href="/gerenciamentofreteadmin" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-white/5"
-                style={{ color: "rgba(var(--zeglam-text-rgb),0.5)", border: "1px solid rgba(255,255,255,0.1)" }}
-              >
-                <Truck className="w-3.5 h-3.5" /> Gerenciar Fretes
+              <a href="/gerenciamentofreteadmin" className="flex items-center gap-1.5 px-2 lg:px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-primary/10 border border-border text-muted-foreground"
+                title="Gerenciar Fretes">
+                <Truck className="w-4 h-4" /> <span className="hidden lg:inline">Gerenciar Fretes</span>
               </a>
-              <a href="/admin/users" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-white/5" style={{ color: "rgba(var(--zeglam-text-rgb),0.5)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <Users className="w-3.5 h-3.5" /> Gerenciar Usuários
+              <a href="/admin/users" className="flex items-center gap-1.5 px-2 lg:px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-primary/10 border border-border text-muted-foreground"
+                title="Gerenciar Usuários">
+                <Users className="w-4 h-4" /> <span className="hidden lg:inline">Gerenciar Usuários</span>
               </a>
-              <a href="/admin/importar-links" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-white/5" style={{ color: "rgba(var(--zeglam-text-rgb),0.5)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <Plus className="w-3.5 h-3.5" /> Importar Links via IA
+              <a href="/admin/importar-links" className="hidden sm:flex items-center gap-1.5 px-2 lg:px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-primary/10 border border-border text-muted-foreground"
+                title="Importar Links via IA">
+                <Plus className="w-4 h-4" /> <span className="hidden lg:inline">Importar Links via IA</span>
               </a>
               <ZeglamButton size="sm" onClick={() => setShowAddLink(true)} className="text-xs">
-                <Plus className="w-3.5 h-3.5" /> Novo Link
+                <Plus className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Novo Link</span>
               </ZeglamButton>
-              <span className="hidden sm:block text-xs px-2 py-1 rounded" style={{ color: "rgba(var(--zeglam-text-rgb),0.4)", background: "rgba(255,255,255,0.04)" }}>
+              <span className="hidden xl:block text-xs px-2 py-1 rounded text-muted-foreground bg-secondary/40">
                 {adminUser?.name}
               </span>
               <Button variant="ghost" size="sm" onClick={() => doLogout()}
-                className="text-xs gap-1.5" style={{ color: "rgba(var(--zeglam-text-rgb),0.5)" }}>
-                <LogOut className="w-3.5 h-3.5" /> Sair
+                className="text-xs gap-1.5 text-muted-foreground hover:text-destructive"
+                title="Sair">
+                <LogOut className="w-4 h-4" /> <span className="hidden lg:inline">Sair</span>
               </Button>
             </div>
           </div>
@@ -1134,15 +1138,15 @@ export default function AdminView() {
           </div>
         )}
 
-        {/* Table */}
-        <div className="zeglam-table-wrap">
+        {/* Table — desktop */}
+        <div className="zeglam-table-wrap hidden md:block">
           <div className="zeglam-table-scroll">
-            <table className="cronograma-table cronograma-table--admin">
+            <table className="cronograma-table cronograma-table--compact">
               <thead>
                 <tr>
                   <th className="cronograma-th w-10 px-3">
                     <input type="checkbox"
-                      className="w-3.5 h-3.5 cursor-pointer accent-amber-500"
+                      className="cursor-pointer"
                       checked={(data?.result?.data ?? []).length > 0 && (data?.result?.data ?? []).every((l: any) => selectedIds.has(l.id))}
                       onChange={toggleSelectAll}
                     />
@@ -1219,7 +1223,7 @@ export default function AdminView() {
                       >
                         <td className={`${tdClass} w-10`}>
                           <input type="checkbox"
-                            className="w-3.5 h-3.5 cursor-pointer accent-amber-500"
+                            className="cursor-pointer"
                             checked={selectedIds.has(link.id)}
                             onChange={() => toggleSelectId(link.id)}
                           />
@@ -1239,7 +1243,7 @@ export default function AdminView() {
                             options={deptOptions}
                             onSave={v => handleCellSave(link.id, "departamento", v)} />
                         </td>
-                        <td className={tdClass} style={{ minWidth: 140 }}>
+                        <td className={tdClass}>
                           <EditCell value={link.observacoes}
                             onSave={v => handleCellSave(link.id, "observacoes", v)} />
                         </td>
@@ -1309,43 +1313,146 @@ export default function AdminView() {
               </tbody>
             </table>
           </div>
-          <p className="zeglam-table-scroll-hint md:hidden">
-            Deslize para a direita para ver todas as colunas →
-          </p>
-          <p className="zeglam-table-scroll-hint hidden md:block">
-            Arraste a barra de rolagem até o final (→) para ver a coluna Ações completa, sem corte
-          </p>
+        </div>
 
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3"
-              style={{ borderTop: "1px solid rgba(184,160,96,0.15)", background: "rgba(10,22,40,0.5)" }}>
-              <p className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.4)" }}>Página {page} de {totalPages}</p>
-              <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="w-7 h-7"
-                  style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(var(--zeglam-text-rgb),0.6)", background: "transparent" }}
-                  onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  const p = page <= 3 ? i + 1 : page + i - 2;
-                  if (p < 1 || p > totalPages) return null;
-                  return (
-                    <Button key={p} size="icon" className="w-7 h-7 text-xs"
-                      style={p === page
-                        ? { background: "linear-gradient(135deg,#c9a84c,#b8a060)", color: "#0a1628", border: "none" }
-                        : { borderColor: "rgba(184,160,96,0.3)", color: "rgba(var(--zeglam-text-rgb),0.6)", background: "transparent", border: "1px solid rgba(184,160,96,0.3)" }}
-                      onClick={() => setPage(p)}>{p}</Button>
-                  );
-                })}
-                <Button variant="outline" size="icon" className="w-7 h-7"
-                  style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(var(--zeglam-text-rgb),0.6)", background: "transparent" }}
-                  onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
+        {/* Cards — mobile */}
+        <div className="md:hidden space-y-3">
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="zeglam-card-mobile">
+                <div className="cronograma-skeleton h-4 w-3/4 mb-3" />
+                <div className="cronograma-skeleton h-3 w-1/2 mb-2" />
+                <div className="cronograma-skeleton h-3 w-2/3" />
               </div>
+            ))
+          ) : (data?.result?.data?.length ?? 0) === 0 ? (
+            <div className="zeglam-card-mobile text-center text-muted-foreground py-10">
+              Nenhum registro encontrado
             </div>
+          ) : (
+            data?.result?.data?.map((link: any) => {
+              const prazoAlert = getDateAlert(link.prazoMaxFinalizar);
+              const statusInfo = statusMap?.[link.status];
+              const isSelected = selectedIds.has(link.id);
+              return (
+                <div
+                  key={link.id}
+                  className={`zeglam-card-mobile ${isSelected ? "ring-2 ring-primary" : ""}`}
+                >
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      className="cursor-pointer mt-1"
+                      checked={isSelected}
+                      onChange={() => toggleSelectId(link.id)}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-mono text-primary mb-0.5">#{link.numero ?? "—"}</p>
+                          <p className="font-semibold text-foreground break-words leading-tight">
+                            {link.nome || "—"}
+                          </p>
+                        </div>
+                        <span
+                          className="px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap shrink-0"
+                          style={{
+                            background: statusInfo?.bgColor ?? "rgba(184,160,96,0.15)",
+                            color: statusInfo?.color ?? "#b8a060",
+                            border: `1px solid ${(statusInfo?.color ?? "#b8a060")}40`,
+                          }}
+                        >
+                          {link.status || "—"}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm mb-3">
+                        {link.departamento && (
+                          <div>
+                            <p className="text-xs text-muted-foreground">Departamento</p>
+                            <p className="font-medium text-foreground/90 truncate">{link.departamento}</p>
+                          </div>
+                        )}
+                        {link.prazoMaxFinalizar && (
+                          <div>
+                            <p className="text-xs text-muted-foreground">Prazo Máx.</p>
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span
+                                className={prazoAlert ? "px-1.5 py-0.5 rounded text-xs font-semibold inline-block" : "font-medium text-foreground/90"}
+                                style={prazoAlert ? { background: prazoAlert.bg, color: prazoAlert.color } : {}}
+                              >
+                                {new Date(link.prazoMaxFinalizar + "T12:00:00").toLocaleDateString("pt-BR")}
+                              </span>
+                              {prazoAlert?.label && (
+                                <span
+                                  className="text-xs font-bold px-1.5 py-0.5 rounded"
+                                  style={{ color: prazoAlert.color, background: prazoAlert.bg, border: `1px solid ${prazoAlert.color}40` }}
+                                >
+                                  {prazoAlert.label}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                        {link.observacoes && (
+                          <div className="col-span-2">
+                            <p className="text-xs text-muted-foreground">Observações</p>
+                            <p className="text-foreground/85 break-words">{link.observacoes}</p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex gap-2 pt-2 border-t border-border/40">
+                        <Button
+                          onClick={() => setEditLink(link)}
+                          size="sm"
+                          variant="outline"
+                          className="flex-1"
+                        >
+                          <Pencil className="w-3.5 h-3.5 mr-1.5" /> Editar
+                        </Button>
+                        <Button
+                          onClick={() => setDeleteConfirm(link.id)}
+                          size="sm"
+                          variant="ghost"
+                          className="text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
+
+        {/* Paginação — compartilhada */}
+        {totalPages > 1 && (
+          <div className="zeglam-glass-panel flex items-center justify-between gap-2 flex-wrap">
+            <p className="text-xs text-muted-foreground">Página {page} de {totalPages}</p>
+            <div className="flex items-center gap-1">
+              <Button variant="outline" size="icon" className="w-8 h-8"
+                onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                const p = page <= 3 ? i + 1 : page + i - 2;
+                if (p < 1 || p > totalPages) return null;
+                return (
+                  <Button key={p} size="icon" className="w-8 h-8 text-xs"
+                    variant={p === page ? "default" : "outline"}
+                    onClick={() => setPage(p)}>{p}</Button>
+                );
+              })}
+              <Button variant="outline" size="icon" className="w-8 h-8"
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modals */}

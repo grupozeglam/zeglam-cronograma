@@ -367,20 +367,21 @@ export function AdminUsers() {
             </Button>
           </div>
 
-          <div className="overflow-x-auto rounded-lg border" style={{ borderColor: "rgba(184,160,96,0.2)" }}>
+          {/* Desktop table */}
+          <div className="hidden md:block overflow-x-auto rounded-xl border border-border">
             <table className="w-full text-sm">
-              <thead style={{ background: "rgba(184,160,96,0.08)" }}>
+              <thead className="bg-secondary">
                 <tr>
-                  <th className="px-4 py-3 text-left" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Nome</th>
-                  <th className="px-4 py-3 text-left" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Usuário</th>
-                  <th className="px-4 py-3 text-right" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Ações</th>
+                  <th className="px-4 py-3 text-left text-muted-foreground font-semibold">Nome</th>
+                  <th className="px-4 py-3 text-left text-muted-foreground font-semibold">Usuário</th>
+                  <th className="px-4 py-3 text-right text-muted-foreground font-semibold">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {Array.isArray(adminUsers) && adminUsers.map((admin) => (
-                  <tr key={admin.id} style={{ borderTop: "1px solid rgba(184,160,96,0.1)" }}>
-                    <td className="px-4 py-3" style={{ color: "rgba(var(--zeglam-text-rgb),0.85)" }}>{admin.name}</td>
-                    <td className="px-4 py-3" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>{admin.username}</td>
+                  <tr key={admin.id} className="border-t border-border">
+                    <td className="px-4 py-3 text-foreground">{admin.name}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{admin.username}</td>
                     <td className="px-4 py-3 text-right flex gap-2 justify-end">
                       <Button
                         variant="ghost"
@@ -390,25 +391,59 @@ export function AdminUsers() {
                           setEditAdminForm({ name: admin.name, username: admin.username });
                           setShowEditAdmin(true);
                         }}
-                        className="text-xs"
-                        style={{ color: "#60a5fa" }}
+                        className="text-primary hover:bg-primary/10"
                       >
-                        <Edit2 className="w-3.5 h-3.5" />
+                        <Edit2 className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDeleteAdmin(admin.id)}
-                        className="text-xs"
-                        style={{ color: "#f87171" }}
+                        className="text-destructive hover:bg-destructive/10"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {Array.isArray(adminUsers) && adminUsers.map((admin) => (
+              <div key={admin.id} className="zeglam-card-mobile">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold text-foreground truncate">{admin.name}</p>
+                    <p className="text-sm text-muted-foreground truncate">@{admin.username}</p>
+                  </div>
+                  <div className="flex gap-1 shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setEditingAdmin(admin);
+                        setEditAdminForm({ name: admin.name, username: admin.username });
+                        setShowEditAdmin(true);
+                      }}
+                      className="text-primary hover:bg-primary/10 h-9 w-9"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDeleteAdmin(admin.id)}
+                      className="text-destructive hover:bg-destructive/10 h-9 w-9"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
           {(!Array.isArray(adminUsers) || adminUsers.length === 0) && (
@@ -434,67 +469,103 @@ export function AdminUsers() {
             </Button>
           </div>
 
-          <div className="overflow-x-auto rounded-lg border" style={{ borderColor: "rgba(184,160,96,0.2)" }}>
+          {/* Desktop table */}
+          <div className="hidden md:block overflow-x-auto rounded-xl border border-border">
             <table className="w-full text-sm">
-              <thead style={{ background: "rgba(184,160,96,0.08)" }}>
+              <thead className="bg-secondary">
                 <tr>
-                  <th className="px-4 py-3 text-left" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Nome</th>
-                  <th className="px-4 py-3 text-left" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Usuário</th>
-                  <th className="px-4 py-3 text-left" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Painel</th>
-                  <th className="px-4 py-3 text-right" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Ações</th>
+                  <th className="px-4 py-3 text-left text-muted-foreground font-semibold">Nome</th>
+                  <th className="px-4 py-3 text-left text-muted-foreground font-semibold">Usuário</th>
+                  <th className="px-4 py-3 text-left text-muted-foreground font-semibold">Painel</th>
+                  <th className="px-4 py-3 text-right text-muted-foreground font-semibold">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {Array.isArray(suppliers) && suppliers.map((supplier) => (
-                  <tr key={supplier.id} style={{ borderTop: "1px solid rgba(184,160,96,0.1)" }}>
-                    <td className="px-4 py-3" style={{ color: "rgba(var(--zeglam-text-rgb),0.85)" }}>{supplier.name}</td>
-                    <td className="px-4 py-3" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>{supplier.username}</td>
-                    <td className="px-4 py-3" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>
-                      <span style={{ background: supplier.panel === "sp" ? "rgba(59,130,246,0.2)" : "rgba(168,85,247,0.2)", color: supplier.panel === "sp" ? "#3b82f6" : "#a855f7", padding: "0.25rem 0.75rem", borderRadius: "0.375rem", fontSize: "0.75rem", fontWeight: "600" }}>
+                  <tr key={supplier.id} className="border-t border-border">
+                    <td className="px-4 py-3 text-foreground">{supplier.name}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{supplier.username}</td>
+                    <td className="px-4 py-3">
+                      <span className="px-2.5 py-1 rounded-full text-xs font-semibold"
+                        style={{ background: supplier.panel === "sp" ? "rgba(59,130,246,0.18)" : "rgba(168,85,247,0.18)", color: supplier.panel === "sp" ? "#3b82f6" : "#a855f7" }}>
                         {supplier.panel === "sp" ? "São Paulo" : "Limeira"}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right flex gap-2 justify-end">
-                      <Button
-                        variant="ghost"
-                        size="sm"
+                      <Button variant="ghost" size="sm"
                         onClick={() => {
                           setEditingSupplier(supplier);
                           setEditSupplierForm({ name: supplier.name, username: supplier.username, panel: supplier.panel || "sp" });
                           setShowEditSupplier(true);
                         }}
-                        className="text-xs"
-                        style={{ color: "#60a5fa" }}
+                        className="text-primary hover:bg-primary/10"
                       >
-                        <Edit2 className="w-3.5 h-3.5" />
+                        <Edit2 className="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
+                      <Button variant="ghost" size="sm"
                         onClick={() => {
                           setEditingSupplier(supplier);
                           setSupplierPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
                           setShowChangeSupplierPassword(true);
                         }}
-                        className="text-xs"
-                        style={{ color: "#fbbf24" }}
+                        className="text-amber-500 hover:bg-amber-500/10"
                       >
-                        <Lock className="w-3.5 h-3.5" />
+                        <Lock className="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
+                      <Button variant="ghost" size="sm"
                         onClick={() => handleDeleteSupplier(supplier.id)}
-                        className="text-xs"
-                        style={{ color: "#f87171" }}
+                        className="text-destructive hover:bg-destructive/10"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {Array.isArray(suppliers) && suppliers.map((supplier) => (
+              <div key={supplier.id} className="zeglam-card-mobile">
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold text-foreground truncate">{supplier.name}</p>
+                    <p className="text-sm text-muted-foreground truncate">@{supplier.username}</p>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full text-xs font-semibold shrink-0"
+                    style={{ background: supplier.panel === "sp" ? "rgba(59,130,246,0.18)" : "rgba(168,85,247,0.18)", color: supplier.panel === "sp" ? "#3b82f6" : "#a855f7" }}>
+                    {supplier.panel === "sp" ? "São Paulo" : "Limeira"}
+                  </span>
+                </div>
+                <div className="flex gap-2 pt-2 border-t border-border/40">
+                  <Button variant="outline" size="sm" className="flex-1"
+                    onClick={() => {
+                      setEditingSupplier(supplier);
+                      setEditSupplierForm({ name: supplier.name, username: supplier.username, panel: supplier.panel || "sp" });
+                      setShowEditSupplier(true);
+                    }}
+                  >
+                    <Edit2 className="w-3.5 h-3.5 mr-1.5" /> Editar
+                  </Button>
+                  <Button variant="ghost" size="sm" className="text-amber-500 hover:bg-amber-500/10"
+                    onClick={() => {
+                      setEditingSupplier(supplier);
+                      setSupplierPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+                      setShowChangeSupplierPassword(true);
+                    }}
+                  >
+                    <Lock className="w-4 h-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm" className="text-destructive hover:bg-destructive/10"
+                    onClick={() => handleDeleteSupplier(supplier.id)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
           </div>
 
           {(!Array.isArray(suppliers) || suppliers.length === 0) && (

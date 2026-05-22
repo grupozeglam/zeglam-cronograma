@@ -644,8 +644,8 @@ export function ShipmentsAdmin() {
                     return (
                       <div
                         key={shipment.id}
-                        className={`bg-slate-700/50 rounded-lg p-3 border border-slate-600 ${
-                          overdue ? "border-red-500 bg-red-900/20" : ""
+                        className={`zeglam-card-mobile ${
+                          overdue ? "border-destructive bg-destructive/5" : ""
                         }`}
                       >
                         <div className="flex items-start gap-3">
@@ -653,11 +653,11 @@ export function ShipmentsAdmin() {
                             type="checkbox"
                             checked={selectedIds.has(shipment.id)}
                             onChange={() => toggleSelectId(shipment.id)}
-                            className="w-4 h-4 cursor-pointer mt-1"
+                            className="cursor-pointer mt-1"
                           />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-2">
-                              <p className="font-semibold text-white truncate">{shipment.clientName}</p>
+                              <p className="font-semibold text-foreground truncate">{shipment.clientName}</p>
                               <span
                                 className="px-2 py-0.5 rounded text-xs font-semibold whitespace-nowrap"
                                 style={{ background: badge.bg, color: badge.text }}
@@ -665,11 +665,11 @@ export function ShipmentsAdmin() {
                                 {badge.label}
                               </span>
                             </div>
-                            <div className="text-xs text-slate-400 space-y-1">
+                            <div className="text-xs text-muted-foreground space-y-1">
                               <p>Galvânica: {shipment.galvanicaEnvio || "—"}</p>
                               <p>Data: {new Date(shipment.createdAt).toLocaleString("pt-BR")}</p>
-                              <p className="text-amber-400">
-                                Obs: {getNotesPreview(shipment.notes)}
+                              <p className="text-foreground/85">
+                                <span className="text-primary font-semibold">Obs:</span> {getNotesPreview(shipment.notes)}
                               </p>
                             </div>
                             <div className="flex items-center gap-2 mt-3">

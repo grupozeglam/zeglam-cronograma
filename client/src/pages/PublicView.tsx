@@ -394,7 +394,7 @@ export default function PublicView() {
         {(viewMode === "table" || window.innerWidth >= 768) && (
           <div className={`zeglam-table-wrap ${viewMode === "cards" ? "hidden md:block" : ""}`}>
             <div className="zeglam-table-scroll">
-              <table className="cronograma-table w-full min-w-[1100px]">
+              <table className="cronograma-table cronograma-table--compact w-full">
                 <thead>
                   <tr>
                     {[

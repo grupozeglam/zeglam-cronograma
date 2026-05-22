@@ -567,9 +567,9 @@ export function SupplierDashboard() {
                   {allShipments.map((shipment) => (
                     <div
                       key={shipment.id}
-                      className={`bg-muted/40 rounded-lg p-4 border border-slate-600 ${
+                      className={`zeglam-card-mobile ${
                         isOverdue(shipment.createdAt) && shipment.status === 'Pendente'
-                          ? 'border-red-500 bg-red-900/20'
+                          ? 'border-destructive bg-destructive/5'
                           : ''
                       }`}
                     >
@@ -578,10 +578,10 @@ export function SupplierDashboard() {
                           type="checkbox"
                           checked={selectedIds.has(shipment.id)}
                           onChange={() => toggleSelectId(shipment.id)}
-                          className="w-4 h-4 cursor-pointer mt-1"
+                          className="cursor-pointer mt-1"
                         />
                         <div className="flex-1">
-                          <p className="text-white font-semibold">{shipment.clientName}</p>
+                          <p className="text-foreground font-semibold">{shipment.clientName}</p>
                           <p className="text-muted-foreground text-xs">Galvânica: {shipment.galvanicaEnvio || "—"}</p>
                           {isOverdue(shipment.createdAt) && shipment.status === "Pendente" && (
                             <div className="flex items-center gap-1 text-red-400 text-xs mt-1">
