@@ -54,7 +54,7 @@ export default function PublicView() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [deptFilter, setDeptFilter] = useState("all");
   const [page, setPage] = useState(1);
-  const [sortBy, setSortBy] = useState("numero");
+  const [sortBy, setSortBy] = useState("prazoMaxFinalizar");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [viewMode, setViewMode] = useState<"table" | "cards">("table");
 
@@ -101,15 +101,28 @@ export default function PublicView() {
       return 500;
     };
     
+    // Para campos de data, valores vazios vão pro final (menos urgentes)
+    const isDateField = (f: string) =>
+      ["prazoMaxFinalizar", "encerramentoLink", "romaneiosClientes",
+       "dataInicioSeparacao", "liberadoEnvio"].includes(f);
+
     filtered = [...filtered].sort((a, b) => {
       // Primeiro, ordena por prioridade de status
       const priorityA = getStatusPriority(a.status);
       const priorityB = getStatusPriority(b.status);
       if (priorityA !== priorityB) return priorityA - priorityB;
-      
+
       // Dentro da mesma prioridade, ordena pelo campo selecionado
-      const av = a[sortBy] ?? ""; const bv = b[sortBy] ?? "";
-      const cmp = String(av).localeCompare(String(bv), "pt-BR", { numeric: true });
+      const av = a[sortBy]; const bv = b[sortBy];
+      if (isDateField(sortBy)) {
+        // null/vazio sempre por último, independente da direção
+        if (!av && !bv) return 0;
+        if (!av) return 1;
+        if (!bv) return -1;
+        const cmp = String(av).localeCompare(String(bv), "pt-BR", { numeric: true });
+        return sortDir === "asc" ? cmp : -cmp;
+      }
+      const cmp = String(av ?? "").localeCompare(String(bv ?? ""), "pt-BR", { numeric: true });
       return sortDir === "asc" ? cmp : -cmp;
     });
     return { data: filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE), total: filtered.length };
@@ -312,77 +325,68 @@ export default function PublicView() {
               <div className="cronograma-muted py-16 text-center">Nenhum registro encontrado</div>
             ) : data?.data.map((link: any) => {
               const prazoStyle = getDateStyle(link.prazoMaxFinalizar, true);
+              const inicioStyle = getDateStyle(link.dataInicioSeparacao);
+              const dateFields: { key: string; label: string; value: any; visible: boolean; badgeClass?: string; suffix?: string }[] = [
+                { key: "encerramentoLink", label: "Encerramento", value: link.encerramentoLink, visible: !!visibleCols.encerramentoLink },
+                { key: "romaneiosClientes", label: "Romaneio", value: link.romaneiosClientes, visible: !!visibleCols.romaneiosClientes },
+                { key: "dataInicioSeparacao", label: "Início Sep.", value: link.dataInicioSeparacao, visible: !!visibleCols.dataInicioSeparacao, badgeClass: inicioStyle?.badgeClass },
+                { key: "prazoMaxFinalizar", label: "Prazo Máx.", value: link.prazoMaxFinalizar, visible: true, badgeClass: prazoStyle?.badgeClass, suffix: prazoStyle?.label },
+                { key: "liberadoEnvio", label: "Lib. Envio", value: link.liberadoEnvio, visible: !!visibleCols.liberadoEnvio, badgeClass: link.liberadoEnvio ? "cronograma-date-badge-ok" : undefined },
+              ];
               return (
                 <motion.div
                   key={link.id}
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="zeglam-card-mobile space-y-4"
+                  className="zeglam-card-mobile space-y-3"
                 >
-                  {/* Header row */}
-                  <div className="flex items-start justify-between gap-2">
+                  {/* Header */}
+                  <div className="flex items-start justify-between gap-2 border-b border-primary/10 pb-3">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                         <span className="cronograma-num">#{link.numero}</span>
                         <StatusBadge status={link.status} statusMap={statusMap} />
                       </div>
-                      <p className="cronograma-name text-sm leading-snug">{link.nome}</p>
+                      <p className="cronograma-name text-[0.95rem] leading-snug break-words">{link.nome}</p>
                     </div>
                   </div>
-                  {/* Details grid */}
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-                    {link.departamento && (
-                      <div>
-                        <span className="cronograma-label">Depto</span>
-                        <p className="cronograma-cell">{link.departamento}</p>
+
+                  {/* Depto + Obs (full width) */}
+                  <div className="space-y-2.5 text-sm">
+                    <div className="flex items-baseline gap-2">
+                      <span className="cronograma-label shrink-0 min-w-[70px]">Depto</span>
+                      <p className={link.departamento ? "cronograma-cell break-words" : "cronograma-empty"}>
+                        {link.departamento || "—"}
+                      </p>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="cronograma-label shrink-0 min-w-[70px]">Obs</span>
+                      <p className={link.observacoes ? `${obsClass(link.observacoes)} break-words` : "cronograma-empty"}>
+                        {link.observacoes || "—"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Datas */}
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 pt-1 text-sm">
+                    {dateFields.filter(f => f.visible).map((f) => (
+                      <div key={f.key} className="min-w-0">
+                        <span className="cronograma-label block mb-0.5">{f.label}</span>
+                        {f.value ? (
+                          <div className="flex flex-wrap items-center gap-1">
+                            <span className={f.badgeClass ?? "cronograma-cell"}>
+                              {formatDate(f.value)}
+                            </span>
+                            {f.suffix && (
+                              <span className={f.badgeClass}>{f.suffix}</span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="cronograma-empty">—</span>
+                        )}
                       </div>
-                    )}
-                    {link.observacoes && (
-                      <div className="col-span-2">
-                        <span className="cronograma-label">Obs</span>
-                        <p className={obsClass(link.observacoes)}>{link.observacoes}</p>
-                      </div>
-                    )}
-                    {link.encerramentoLink && visibleCols.encerramentoLink && (
-                      <div>
-                        <span className="cronograma-label">Encerramento</span>
-                        <p className="cronograma-cell">{formatDate(link.encerramentoLink)}</p>
-                      </div>
-                    )}
-                    {link.romaneiosClientes && visibleCols.romaneiosClientes && (
-                      <div>
-                        <span className="cronograma-label">Romaneio</span>
-                        <p className="cronograma-cell">{formatDate(link.romaneiosClientes)}</p>
-                      </div>
-                    )}
-                    {link.dataInicioSeparacao && visibleCols.dataInicioSeparacao && (
-                      <div>
-                        <span className="cronograma-label">Início Sep.</span>
-                        <p className="cronograma-cell">{formatDate(link.dataInicioSeparacao)}</p>
-                      </div>
-                    )}
-                    {link.prazoMaxFinalizar && (
-                      <div>
-                        <span className="cronograma-label">Prazo Máx.</span>
-                        <div className="mt-0.5 flex items-center gap-1">
-                          <span className={prazoStyle?.badgeClass ?? "cronograma-cell"}>
-                            {formatDate(link.prazoMaxFinalizar)}
-                          </span>
-                          {prazoStyle?.label && (
-                            <span className={prazoStyle.badgeClass}>{prazoStyle.label}</span>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                    {link.liberadoEnvio && visibleCols.liberadoEnvio && (
-                      <div>
-                        <span className="cronograma-label">Lib. Envio</span>
-                        <p className="cronograma-date-badge-ok inline-block">
-                          {formatDate(link.liberadoEnvio)}
-                        </p>
-                      </div>
-                    )}
+                    ))}
                   </div>
                 </motion.div>
               );
