@@ -1,4 +1,4 @@
-FROM node:20-slim AS builder
+FROM node:22-slim AS builder
 
 WORKDIR /app
 
@@ -21,7 +21,7 @@ RUN ls -la && (ls -la client/ || echo "ERRO: Pasta client/ não encontrada no Do
 RUN pnpm build
 
 # ── Estágio de produção ──
-FROM node:20-slim AS runner
+FROM node:22-slim AS runner
 
 WORKDIR /app
 
