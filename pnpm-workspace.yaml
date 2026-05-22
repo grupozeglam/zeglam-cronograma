@@ -1,5 +1,5 @@
-allowBuilds:
-  '@scarf/scarf': false
-  core-js: true
-  esbuild: true
-onlyBuiltDependencies: esbuild
+onlyBuiltDependencies:
+  - esbuild
+ignoredBuiltDependencies:
+  - "@scarf/scarf"
+  - core-js

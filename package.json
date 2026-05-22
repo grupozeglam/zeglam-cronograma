@@ -110,9 +110,5 @@
     "typescript": "5.9.3",
     "vite": "^6.4.0",
     "vitest": "^2.1.4"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"],
-    "ignoredBuiltDependencies": ["@scarf/scarf", "core-js"]
   }
 }
