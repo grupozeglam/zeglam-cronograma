@@ -7,6 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, LogOut, Eye, ChevronLeft, ChevronRight, Trash2, FileText, Download, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import { ZeglamButton } from "@/components/ZeglamButton";
+import { ZeglamGlassPanel } from "@/components/ZeglamGlassPanel";
+import { ZeglamHeader } from "@/components/ZeglamHeader";
+import { ZeglamPageShell } from "@/components/ZeglamPageShell";
 
 const STATUSES = [
   { value: "all", label: "Todos os Status" },
@@ -236,53 +240,49 @@ export function SupplierDashboard() {
 
   if (!supplierInfo) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-      </div>
+      <ZeglamPageShell centered>
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </ZeglamPageShell>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 p-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8 pt-4">
-          <div>
-            <h1 className="text-3xl font-bold text-white">{supplierInfo.name}</h1>
-            <p className="text-slate-400">Seus comprovantes de frete</p>
-          </div>
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            className="border-slate-600 text-slate-200 hover:bg-slate-700"
-          >
-            <LogOut className="w-4 h-4 mr-2" />
+    <ZeglamPageShell>
+      <ZeglamHeader
+        title={supplierInfo.name}
+        subtitle="Seus comprovantes de frete"
+        badge="Fornecedor"
+        actions={
+          <ZeglamButton variant="outline" size="sm" onClick={handleLogout}>
+            <LogOut className="h-4 w-4" />
             Sair
-          </Button>
-        </div>
+          </ZeglamButton>
+        }
+      />
+      <main className="container flex-1 pb-8">
 
         {/* Dashboard de Estatísticas */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Card className="border-slate-700 bg-slate-800/50">
+          <Card className="border-border/80 bg-card/70">
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-slate-400 text-sm mb-2">Total Recebido</p>
+                <p className="text-muted-foreground text-sm mb-2">Total Recebido</p>
                 <p className="text-3xl font-bold text-blue-400">{allShipments.filter(s => s.status === 'Pendente').length}</p>
               </div>
             </CardContent>
           </Card>
-          <Card className="border-slate-700 bg-slate-800/50">
+          <Card className="border-border/80 bg-card/70">
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-slate-400 text-sm mb-2">Processado</p>
+                <p className="text-muted-foreground text-sm mb-2">Processado</p>
                 <p className="text-3xl font-bold text-amber-400">{allShipments.filter(s => s.status === 'Processado').length}</p>
               </div>
             </CardContent>
           </Card>
-          <Card className="border-slate-700 bg-slate-800/50">
+          <Card className="border-border/80 bg-card/70">
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-slate-400 text-sm mb-2">Enviado</p>
+                <p className="text-muted-foreground text-sm mb-2">Enviado</p>
                 <p className="text-3xl font-bold text-green-400">{allShipments.filter(s => s.status === 'Enviado').length}</p>
               </div>
             </CardContent>
@@ -296,27 +296,27 @@ export function SupplierDashboard() {
             onClick={() => setSelectedImage(null)}
           >
             <div
-              className="bg-slate-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto"
+              className="bg-card rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="p-4 border-b border-slate-700 flex justify-between items-center sticky top-0 bg-slate-800">
+              <div className="p-4 border-b border-border flex justify-between items-center sticky top-0 bg-card">
                 <h3 className="text-white font-semibold">Comprovante de Frete</h3>
                 <button
                   onClick={() => setSelectedImage(null)}
-                  className="text-slate-400 hover:text-white text-2xl"
+                  className="text-muted-foreground hover:text-white text-2xl"
                 >
                   ✗
                 </button>
               </div>
               <div className="p-4">
                 {selectedImage.endsWith('.pdf') ? (
-                  <div className="bg-slate-700 rounded p-8 text-center">
-                    <p className="text-slate-300 mb-4">Arquivo PDF</p>
+                  <div className="bg-muted rounded p-8 text-center">
+                    <p className="text-foreground/80 mb-4">Arquivo PDF</p>
                     <a
                       href={selectedImage}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded"
+                      className="zeglam-btn-primary inline-block rounded px-6 py-2"
                     >
                       Clique para abrir o PDF
                     </a>
@@ -336,7 +336,7 @@ export function SupplierDashboard() {
             onClick={() => setSelectedNotes(null)}
           >
             <div
-              className="bg-slate-800 rounded-lg max-w-md w-full p-6"
+              className="bg-card rounded-lg max-w-md w-full p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center gap-2 mb-4">
@@ -346,14 +346,14 @@ export function SupplierDashboard() {
               <textarea
                 value={editingNotes?.text || ""}
                 onChange={(e) => setEditingNotes(editingNotes ? { ...editingNotes, text: e.target.value } : null)}
-                className="w-full h-32 bg-slate-700 border border-slate-600 rounded text-white p-3 mb-4"
+                className="w-full h-32 bg-input border border-input rounded text-white p-3 mb-4"
                 placeholder="Adicione observações sobre este comprovante..."
               />
               <div className="flex gap-2 justify-end">
                 <Button
                   onClick={() => setSelectedNotes(null)}
                   variant="outline"
-                  className="border-slate-600 text-slate-200"
+                  className="border-border text-foreground"
                 >
                   Cancelar
                 </Button>
@@ -381,14 +381,14 @@ export function SupplierDashboard() {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="flex-1 min-w-[200px] bg-slate-700 border-slate-600 text-white"
+            className="flex-1 min-w-[200px] bg-input border-input text-white"
           />
 
           <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
-            <SelectTrigger className="w-[200px] bg-slate-700 border-slate-600 text-white">
+            <SelectTrigger className="w-[200px] bg-input border-input text-white">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-slate-700 border-slate-600">
+            <SelectContent className="bg-input border-input">
               {STATUSES.map((s) => (
                 <SelectItem key={s.value} value={s.value} className="text-white">
                   {s.label}
@@ -399,10 +399,10 @@ export function SupplierDashboard() {
           {selectedIds.size > 0 && (
             <>
               <Select value={bulkStatus} onValueChange={setBulkStatus}>
-                <SelectTrigger className="w-[140px] bg-slate-700 border-slate-600 text-white">
+                <SelectTrigger className="w-[140px] bg-input border-input text-white">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-700 border-slate-600">
+                <SelectContent className="bg-input border-input">
                   {["Pendente", "Processado", "Enviado"].map((s) => (
                     <SelectItem key={s} value={s} className="text-white">
                       {s}
@@ -429,7 +429,7 @@ export function SupplierDashboard() {
         </div>
 
         {/* Tabela de Comprovantes */}
-        <Card className="border-slate-700 bg-slate-800">
+        <Card className="border-border/80 bg-card">
           <CardHeader>
             <CardTitle className="text-white">Comprovantes Recebidos</CardTitle>
             <CardDescription>
@@ -442,7 +442,7 @@ export function SupplierDashboard() {
                 <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
               </div>
             ) : allShipments.length === 0 ? (
-              <div className="text-center py-8 text-slate-400">
+              <div className="text-center py-8 text-muted-foreground">
                 Nenhum comprovante encontrado
               </div>
             ) : (
@@ -451,8 +451,8 @@ export function SupplierDashboard() {
                 <div className="hidden md:block overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-slate-700">
-                        <th className="text-left py-3 px-4 font-semibold text-slate-300">
+                      <tr className="border-b border-border">
+                        <th className="text-left py-3 px-4 font-semibold text-foreground/80">
                           <input
                             type="checkbox"
                             checked={selectedIds.size === allShipments.length && allShipments.length > 0}
@@ -460,19 +460,19 @@ export function SupplierDashboard() {
                             className="w-4 h-4 cursor-pointer"
                           />
                         </th>
-                        <th className="text-left py-3 px-4 font-semibold text-slate-300">Cliente</th>
-                        <th className="text-left py-3 px-4 font-semibold text-slate-300">Galvânica</th>
-                        <th className="text-left py-3 px-4 font-semibold text-slate-300">Status</th>
-                        <th className="text-left py-3 px-4 font-semibold text-slate-300">Observações</th>
-                        <th className="text-left py-3 px-4 font-semibold text-slate-300">Data</th>
-                        <th className="text-left py-3 px-4 font-semibold text-slate-300">Ações</th>
+                        <th className="text-left py-3 px-4 font-semibold text-foreground/80">Cliente</th>
+                        <th className="text-left py-3 px-4 font-semibold text-foreground/80">Galvânica</th>
+                        <th className="text-left py-3 px-4 font-semibold text-foreground/80">Status</th>
+                        <th className="text-left py-3 px-4 font-semibold text-foreground/80">Observações</th>
+                        <th className="text-left py-3 px-4 font-semibold text-foreground/80">Data</th>
+                        <th className="text-left py-3 px-4 font-semibold text-foreground/80">Ações</th>
                       </tr>
                     </thead>
                     <tbody>
                       {allShipments.map((shipment) => (
                         <tr
                           key={shipment.id}
-                          className={`border-b border-slate-700 hover:bg-slate-700/50 ${
+                          className={`border-b border-border hover:bg-accent/40 ${
                             isOverdue(shipment.createdAt) && shipment.status === "Pendente"
                               ? "bg-red-900/20"
                               : ""
@@ -487,7 +487,7 @@ export function SupplierDashboard() {
                             />
                           </td>
                           <td className="py-3 px-4 text-white">{shipment.clientName}</td>
-                          <td className="py-3 px-4 text-slate-300">{shipment.galvanicaEnvio || "—"}</td>
+                          <td className="py-3 px-4 text-foreground/80">{shipment.galvanicaEnvio || "—"}</td>
                           <td className="py-3 px-4">
                             <Select
                               value={shipment.status}
@@ -503,7 +503,7 @@ export function SupplierDashboard() {
                               >
                                 <SelectValue />
                               </SelectTrigger>
-                              <SelectContent className="bg-slate-700 border-slate-600">
+                              <SelectContent className="bg-input border-input">
                                 {["Pendente", "Processado", "Enviado"].map((s) => (
                                   <SelectItem key={s} value={s} className="text-white">
                                     {s}
@@ -512,10 +512,10 @@ export function SupplierDashboard() {
                               </SelectContent>
                             </Select>
                           </td>
-                          <td className="py-3 px-4 text-slate-300 text-xs max-w-xs truncate">
+                          <td className="py-3 px-4 text-foreground/80 text-xs max-w-xs truncate">
                             {shipment.notes ? shipment.notes.substring(0, 30) + (shipment.notes.length > 30 ? "..." : "") : "—"}
                           </td>
-                          <td className="py-3 px-4 text-slate-300 text-xs">
+                          <td className="py-3 px-4 text-foreground/80 text-xs">
                             {new Date(shipment.createdAt).toLocaleString("pt-BR")}
                           </td>
                           <td className="py-3 px-4 flex gap-2">
@@ -567,7 +567,7 @@ export function SupplierDashboard() {
                   {allShipments.map((shipment) => (
                     <div
                       key={shipment.id}
-                      className={`bg-slate-700/50 rounded-lg p-4 border border-slate-600 ${
+                      className={`bg-muted/40 rounded-lg p-4 border border-slate-600 ${
                         isOverdue(shipment.createdAt) && shipment.status === 'Pendente'
                           ? 'border-red-500 bg-red-900/20'
                           : ''
@@ -582,7 +582,7 @@ export function SupplierDashboard() {
                         />
                         <div className="flex-1">
                           <p className="text-white font-semibold">{shipment.clientName}</p>
-                          <p className="text-slate-400 text-xs">Galvânica: {shipment.galvanicaEnvio || "—"}</p>
+                          <p className="text-muted-foreground text-xs">Galvânica: {shipment.galvanicaEnvio || "—"}</p>
                           {isOverdue(shipment.createdAt) && shipment.status === "Pendente" && (
                             <div className="flex items-center gap-1 text-red-400 text-xs mt-1">
                               <AlertCircle className="w-3 h-3" />
@@ -593,7 +593,7 @@ export function SupplierDashboard() {
                       </div>
                       <div className="space-y-2">
                         <div className="flex gap-2 items-center">
-                          <span className="text-slate-400 text-xs">Status:</span>
+                          <span className="text-muted-foreground text-xs">Status:</span>
                           <Select
                             value={shipment.status}
                             onValueChange={(v) => handleStatusChange(shipment.id, v)}
@@ -607,7 +607,7 @@ export function SupplierDashboard() {
                             >
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent className="bg-slate-700 border-slate-600">
+                            <SelectContent className="bg-input border-input">
                               {["Pendente", "Processado", "Enviado"].map((s) => (
                                 <SelectItem key={s} value={s} className="text-white">
                                   {s}
@@ -617,11 +617,11 @@ export function SupplierDashboard() {
                           </Select>
                         </div>
                         {shipment.notes && (
-                          <p className="text-slate-300 text-xs bg-slate-600/30 p-2 rounded">
+                          <p className="text-foreground/80 text-xs bg-muted/50 p-2 rounded">
                             <strong>Obs:</strong> {shipment.notes.substring(0, 50)}...
                           </p>
                         )}
-                        <p className="text-slate-400 text-xs">
+                        <p className="text-muted-foreground text-xs">
                           {new Date(shipment.createdAt).toLocaleString("pt-BR")}
                         </p>
                         <div className="flex gap-2 mt-2">
@@ -666,24 +666,24 @@ export function SupplierDashboard() {
 
                 {/* Paginação */}
                 {totalPages > 1 && (
-                  <div className="flex justify-between items-center mt-6 pt-4 border-t border-slate-700">
+                  <div className="flex justify-between items-center mt-6 pt-4 border-t border-border">
                     <Button
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1}
                       variant="outline"
-                      className="border-slate-600 text-slate-200"
+                      className="border-border text-foreground"
                     >
                       <ChevronLeft className="w-4 h-4 mr-1" />
                       Anterior
                     </Button>
-                    <span className="text-slate-400 text-sm">
+                    <span className="text-muted-foreground text-sm">
                       Página {page} de {totalPages}
                     </span>
                     <Button
                       onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
                       variant="outline"
-                      className="border-slate-600 text-slate-200"
+                      className="border-border text-foreground"
                     >
                       Próxima
                       <ChevronRight className="w-4 h-4 ml-1" />
@@ -694,7 +694,7 @@ export function SupplierDashboard() {
             )}
           </CardContent>
         </Card>
-      </div>
-    </div>
+      </main>
+    </ZeglamPageShell>
   );
 }

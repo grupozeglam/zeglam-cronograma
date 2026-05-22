@@ -33,7 +33,7 @@ export function ClosingAlert({ links }: { links: Link[] }) {
         <p style={{ color: "#fbbf24" }} className="text-sm font-medium">
           Atenção: {closingSoon.length} link(s) será(ão) fechado(s) nas próximas 24 horas!
         </p>
-        <ul className="mt-2 text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>
+        <ul className="mt-2 text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>
           {closingSoon.map(link => (
             <li key={link.id}>• {link.nome}</li>
           ))}

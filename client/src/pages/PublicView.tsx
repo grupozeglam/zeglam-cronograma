@@ -1,4 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
+import { ZeglamFloatingOrbs } from "@/components/ZeglamFloatingOrbs";
+import { ZeglamGlassPanel } from "@/components/ZeglamGlassPanel";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { StatusBadge, STATUS_DEFAULTS } from "@/components/StatusBadge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import ShipmentSubmit from "./ShipmentSubmit";
 
-const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663391333985/kfJrCdZgsWRY3f9mLQkwBL/zeglam-logo_80654552.png";
+import { ZEGLAM_LOGO_URL, ZEGLAM_SITE_URL } from "@/lib/brand";
 const PAGE_SIZE = 50;
 
 function formatDate(val: string | null | undefined) {
@@ -17,18 +21,30 @@ function formatDate(val: string | null | undefined) {
   return d.toLocaleDateString("pt-BR");
 }
 
-function getDateStyle(val: string | null | undefined, isDeadline = false) {
+type DateStyle = { badgeClass: string; label?: string };
+
+function getDateStyle(val: string | null | undefined, isDeadline = false): DateStyle | null {
   if (!val) return null;
   const d = new Date(val + "T12:00:00");
   if (isNaN(d.getTime())) return null;
-  const today = new Date(); today.setHours(0,0,0,0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const diff = Math.ceil((d.getTime() - today.getTime()) / 86400000);
   if (isDeadline) {
-    if (diff < 0) return { color: "#f87171", bg: "rgba(248,113,113,0.12)", label: "Vencido" };
-    if (diff <= 3) return { color: "#fbbf24", bg: "rgba(251,191,36,0.12)", label: `${diff}d` };
-    return { color: "#4ade80", bg: "rgba(74,222,128,0.10)", label: null };
+    if (diff < 0) return { badgeClass: "cronograma-date-badge-danger", label: "Vencido" };
+    if (diff <= 3) return { badgeClass: "cronograma-date-badge-warn", label: `${diff}d` };
+    return { badgeClass: "cronograma-date-badge-ok" };
   }
-  return { color: "rgba(255,255,255,0.65)", bg: "transparent", label: null };
+  return { badgeClass: "cronograma-cell" };
+}
+
+function obsClass(obs: string | null | undefined): string {
+  if (!obs) return "cronograma-empty";
+  const o = obs.toLowerCase();
+  if (o.includes("cancel")) return "text-red-700 dark:text-red-400";
+  if (o.includes("liberad")) return "text-emerald-700 dark:text-emerald-400";
+  if (o.includes("aguard")) return "text-amber-700 dark:text-amber-400";
+  return "cronograma-cell";
 }
 
 type SortDir = "asc" | "desc";
@@ -148,95 +164,110 @@ export default function PublicView() {
   };
 
   const SortIcon = ({ col }: { col: string }) => (
-    <ArrowUpDown className={`w-3 h-3 ml-1 inline-block ${sortBy === col ? "opacity-100" : "opacity-20"}`}
-      style={{ color: sortBy === col ? "#b8a060" : undefined }} />
+    <ArrowUpDown
+      className={`ml-1 inline-block h-3 w-3 ${sortBy === col ? "text-primary opacity-100" : "opacity-30"}`}
+    />
   );
 
-  const thClass = "px-3 py-3.5 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap select-none";
-  const tdClass = "px-3 py-2.5 border-b border-white/5 text-sm";
-
-  const obsColor = (obs: string | null) => obs
-    ? obs.toLowerCase().includes("cancel") ? "#f87171"
-    : obs.toLowerCase().includes("liberad") ? "#4ade80"
-    : obs.toLowerCase().includes("aguard") ? "#fbbf24"
-    : "rgba(255,255,255,0.75)"
-    : "rgba(255,255,255,0.3)";
+  const thClass = "cronograma-th";
+  const tdClass = "cronograma-td";
 
   return (
-    <div className="min-h-screen" style={{ background: "#0f1e38" }}>
-      {/* Header */}
-      <header style={{ background: "linear-gradient(180deg, #0a1628 0%, #0f1e38 100%)", borderBottom: "1px solid rgba(184,160,96,0.25)" }}>
+    <div className="zeglam-page relative min-h-screen">
+      <div className="zeglam-page-glow pointer-events-none absolute inset-0" aria-hidden />
+      <ZeglamFloatingOrbs />
+      <header className="zeglam-header relative z-10">
         <div className="container py-3 md:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 md:gap-4">
-              <a href="https://grupozeglam.click" target="_blank" rel="noopener noreferrer">
-                <img src={LOGO_URL} alt="Grupo Zeglam" className="h-9 md:h-12 w-auto object-contain hover:opacity-80 transition-opacity" />
+              <a href={ZEGLAM_SITE_URL} target="_blank" rel="noopener noreferrer">
+                <img src={ZEGLAM_LOGO_URL} alt="Grupo Zeglam" className="h-9 w-auto object-contain transition-opacity hover:opacity-85 md:h-12" />
               </a>
-              <div className="hidden sm:block h-8 w-px" style={{ background: "rgba(184,160,96,0.3)" }} />
+              <div className="hidden h-8 w-px bg-primary/30 sm:block" />
               <div className="hidden sm:block">
-                <p className="text-xs font-medium tracking-widest uppercase" style={{ color: "#b8a060" }}>Cronograma</p>
-                <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>Acompanhamento de Links</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Cronograma</p>
+                <p className="text-sm text-muted-foreground">Acompanhamento de links</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              {/* Mobile view toggle */}
+              <ThemeToggle size="sm" />
               <button
-                className="md:hidden p-2 rounded-lg text-xs"
-                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "#b8a060" }}
-                onClick={() => setViewMode(v => v === "table" ? "cards" : "table")}>
-                {viewMode === "table" ? <LayoutGrid className="w-4 h-4" /> : <ArrowUpDown className="w-4 h-4" />}
+                type="button"
+                className="rounded-lg border border-primary/20 bg-accent/30 p-2 text-primary md:hidden"
+                onClick={() => setViewMode((v) => (v === "table" ? "cards" : "table"))}
+                aria-label="Alternar visualização"
+              >
+                {viewMode === "table" ? <LayoutGrid className="h-4 w-4" /> : <ArrowUpDown className="h-4 w-4" />}
               </button>
-                <a href="/envioscomprovantes" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all hover:shadow-lg hover:scale-105"
-                style={{ background: "linear-gradient(135deg, #b8a060 0%, #9d8a4d 100%)", color: "#0a1628", border: "1px solid #c9b570" }}>
-                <FileUp className="w-3.5 h-3.5" /> Enviar Comprovante
-              </a>
-
+              <motion.a
+                href="/envioscomprovantes"
+                className="zeglam-btn zeglam-btn-primary zeglam-btn-sm flex items-center gap-1.5 no-underline"
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <span className="zeglam-btn-shine" aria-hidden />
+                <FileUp className="h-3.5 w-3.5" /> Enviar comprovante
+              </motion.a>
             </div>
           </div>
         </div>
       </header>
+      <div className="relative z-10">
 
       <div className="container py-4 md:py-6 space-y-4 md:space-y-5">
         {/* Stats */}
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-2 md:gap-3">
-          {statCards.map(({ label, value, color }) => {
+          {statCards.map(({ label, value, color }, i) => {
             const isActive = (label === "Total" && statusFilter === "all") || label === statusFilter;
             return (
-              <div key={label}
-                className="rounded-xl p-2 md:p-3 text-center cursor-pointer transition-all hover:scale-105"
+              <motion.div
+                key={label}
+                role="button"
+                tabIndex={0}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -4, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={`zeglam-stat-card cursor-pointer ${isActive ? "is-active" : ""}`}
                 style={{
-                  background: isActive ? `${color}25` : `${color}12`,
-                  border: isActive ? `2px solid ${color}90` : `1px solid ${color}30`,
-                  boxShadow: isActive ? `0 0 12px ${color}30` : "none",
+                  background: isActive ? `${color}22` : undefined,
+                  borderColor: isActive ? `${color}88` : undefined,
                 }}
-                onClick={() => { setStatusFilter(label === "Total" ? "all" : label); setPage(1); }}>
-                <div className="text-lg md:text-2xl font-bold" style={{ color }}>{value}</div>
-                <div className="text-xs mt-0.5 truncate" style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.65rem" }}>{label}</div>
-              </div>
+                onClick={() => { setStatusFilter(label === "Total" ? "all" : label); setPage(1); }}
+                onKeyDown={(e) => e.key === "Enter" && (setStatusFilter(label === "Total" ? "all" : label), setPage(1))}
+              >
+                <div
+                  className={`cronograma-stat-value ${label === "Total" ? "is-total" : ""}`}
+                  style={label !== "Total" ? { color } : undefined}
+                >
+                  {value}
+                </div>
+                <div className="mt-1 truncate text-[0.7rem] font-medium uppercase tracking-wide text-muted-foreground md:text-xs">
+                  {label}
+                </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* Filters */}
-        <div className="rounded-xl p-3 flex flex-wrap gap-2 md:gap-3 items-center"
-          style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(184,160,96,0.15)" }}>
+        <ZeglamGlassPanel delay={0.15} className="flex flex-wrap items-center gap-2 md:gap-3">
           <div className="relative flex-1 min-w-[160px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4" style={{ color: "#b8a060" }} />
+            <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-primary md:h-4 md:w-4" />
             <Input placeholder="Buscar por nome..." value={search}
               onChange={e => { setSearch(e.target.value); setPage(1); }}
-              className="pl-8 text-sm h-9"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }} />
+              className="cronograma-input-surface pl-8 text-sm h-9" />
           </div>
           <Select value={statusFilter} onValueChange={v => { setStatusFilter(v); setPage(1); }}>
-            <SelectTrigger className="w-[140px] md:w-[170px] text-sm h-9"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}>
-              <Filter className="w-3.5 h-3.5 mr-1" style={{ color: "#b8a060" }} />
+            <SelectTrigger className="cronograma-input-surface w-[140px] md:w-[170px] text-sm h-9">
+              <Filter className="w-3.5 h-3.5 mr-1 text-primary" />
               <SelectValue placeholder="Status" />
             </SelectTrigger>
-            <SelectContent style={{ background: "#152340", border: "1px solid rgba(184,160,96,0.25)" }}>
-              <SelectItem value="all" className="text-white focus:bg-white/10">Todos os Status</SelectItem>
+            <SelectContent className="cronograma-popover">
+              <SelectItem value="all">Todos os Status</SelectItem>
               {statusesData?.map((s: any) => (
-                <SelectItem key={s.id} value={s.name} className="text-white focus:bg-white/10">
+                <SelectItem key={s.id} value={s.name}>
                   <span className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full" style={{ background: s.color }} />{s.name}
                   </span>
@@ -245,116 +276,115 @@ export default function PublicView() {
             </SelectContent>
           </Select>
           <Select value={deptFilter} onValueChange={v => { setDeptFilter(v); setPage(1); }}>
-            <SelectTrigger className="w-[140px] md:w-[170px] text-sm h-9"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}>
-              <LayoutGrid className="w-3.5 h-3.5 mr-1" style={{ color: "#b8a060" }} />
+            <SelectTrigger className="cronograma-input-surface w-[140px] md:w-[170px] text-sm h-9">
+              <LayoutGrid className="w-3.5 h-3.5 mr-1 text-primary" />
               <SelectValue placeholder="Depto." />
             </SelectTrigger>
-            <SelectContent style={{ background: "#152340", border: "1px solid rgba(184,160,96,0.25)" }}>
-              <SelectItem value="all" className="text-white focus:bg-white/10">Todos os Depto.</SelectItem>
+            <SelectContent className="cronograma-popover">
+              <SelectItem value="all">Todos os Depto.</SelectItem>
               {(deptsData ?? []).map((d: any) => (
-                <SelectItem key={d.id} value={d.name} className="text-white focus:bg-white/10">{d.name}</SelectItem>
+                <SelectItem key={d.id} value={d.name}>{d.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
           {(search || statusFilter !== "all" || deptFilter !== "all") && (
             <Button variant="ghost" size="sm" onClick={() => { setSearch(""); setStatusFilter("all"); setDeptFilter("all"); setPage(1); }}
-              className="text-xs h-9" style={{ color: "rgba(255,255,255,0.4)" }}>
+              className="h-9 text-xs text-muted-foreground">
               Limpar ×
             </Button>
           )}
-          <div className="ml-auto text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
-            <strong style={{ color: "rgba(255,255,255,0.7)" }}>{data?.total ?? 0}</strong> registros
+          <div className="ml-auto text-xs text-muted-foreground">
+            <strong className="text-foreground/80">{data?.total ?? 0}</strong> registros
           </div>
-        </div>
+        </ZeglamGlassPanel>
 
         {/* ── MOBILE CARDS ── */}
         {viewMode === "cards" && (
-          <div className="space-y-3 md:hidden">
+          <div className="space-y-4 md:hidden">
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="rounded-xl p-4 animate-pulse" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(184,160,96,0.1)" }}>
-                  <div className="h-4 w-2/3 rounded mb-3" style={{ background: "rgba(255,255,255,0.08)" }} />
-                  <div className="h-3 w-1/3 rounded" style={{ background: "rgba(255,255,255,0.06)" }} />
+                <div key={i} className="zeglam-card-mobile animate-pulse space-y-4 p-5">
+                  <div className="cronograma-skeleton mb-3 h-4 w-2/3" />
+                  <div className="cronograma-skeleton h-3 w-1/3" />
                 </div>
               ))
             ) : data?.data.length === 0 ? (
-              <div className="text-center py-16" style={{ color: "rgba(255,255,255,0.35)" }}>Nenhum registro encontrado</div>
+              <div className="cronograma-muted py-16 text-center">Nenhum registro encontrado</div>
             ) : data?.data.map((link: any) => {
               const prazoStyle = getDateStyle(link.prazoMaxFinalizar, true);
               return (
-                <div key={link.id} className="rounded-xl p-4 space-y-3"
-                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(184,160,96,0.15)" }}>
+                <motion.div
+                  key={link.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="zeglam-card-mobile space-y-4"
+                >
                   {/* Header row */}
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-mono text-xs" style={{ color: "rgba(184,160,96,0.7)" }}>#{link.numero}</span>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="cronograma-num">#{link.numero}</span>
                         <StatusBadge status={link.status} statusMap={statusMap} />
                       </div>
-                      <p className="font-medium text-sm leading-snug" style={{ color: "rgba(255,255,255,0.9)" }}>{link.nome}</p>
+                      <p className="cronograma-name text-sm leading-snug">{link.nome}</p>
                     </div>
                   </div>
                   {/* Details grid */}
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
                     {link.departamento && (
                       <div>
-                        <span style={{ color: "rgba(184,160,96,0.6)" }}>Depto</span>
-                        <p style={{ color: "rgba(255,255,255,0.7)" }}>{link.departamento}</p>
+                        <span className="cronograma-label">Depto</span>
+                        <p className="cronograma-cell">{link.departamento}</p>
                       </div>
                     )}
                     {link.observacoes && (
                       <div className="col-span-2">
-                        <span style={{ color: "rgba(184,160,96,0.6)" }}>Obs</span>
-                        <p style={{ color: obsColor(link.observacoes) }}>{link.observacoes}</p>
+                        <span className="cronograma-label">Obs</span>
+                        <p className={obsClass(link.observacoes)}>{link.observacoes}</p>
                       </div>
                     )}
                     {link.encerramentoLink && visibleCols.encerramentoLink && (
                       <div>
-                        <span style={{ color: "rgba(184,160,96,0.6)" }}>Encerramento</span>
-                        <p style={{ color: "rgba(255,255,255,0.7)" }}>{formatDate(link.encerramentoLink)}</p>
+                        <span className="cronograma-label">Encerramento</span>
+                        <p className="cronograma-cell">{formatDate(link.encerramentoLink)}</p>
                       </div>
                     )}
                     {link.romaneiosClientes && visibleCols.romaneiosClientes && (
                       <div>
-                        <span style={{ color: "rgba(184,160,96,0.6)" }}>Romaneio</span>
-                        <p style={{ color: "rgba(255,255,255,0.7)" }}>{formatDate(link.romaneiosClientes)}</p>
+                        <span className="cronograma-label">Romaneio</span>
+                        <p className="cronograma-cell">{formatDate(link.romaneiosClientes)}</p>
                       </div>
                     )}
                     {link.dataInicioSeparacao && visibleCols.dataInicioSeparacao && (
                       <div>
-                        <span style={{ color: "rgba(184,160,96,0.6)" }}>Início Sep.</span>
-                        <p style={{ color: "rgba(255,255,255,0.7)" }}>{formatDate(link.dataInicioSeparacao)}</p>
+                        <span className="cronograma-label">Início Sep.</span>
+                        <p className="cronograma-cell">{formatDate(link.dataInicioSeparacao)}</p>
                       </div>
                     )}
                     {link.prazoMaxFinalizar && (
                       <div>
-                        <span style={{ color: "rgba(184,160,96,0.6)" }}>Prazo Máx.</span>
-                        <div className="flex items-center gap-1 mt-0.5">
-                          <span className="px-1.5 py-0.5 rounded text-xs"
-                            style={{ color: prazoStyle?.color ?? "rgba(255,255,255,0.7)", background: prazoStyle?.bg ?? "transparent" }}>
+                        <span className="cronograma-label">Prazo Máx.</span>
+                        <div className="mt-0.5 flex items-center gap-1">
+                          <span className={prazoStyle?.badgeClass ?? "cronograma-cell"}>
                             {formatDate(link.prazoMaxFinalizar)}
                           </span>
                           {prazoStyle?.label && (
-                            <span className="text-xs font-bold px-1 py-0.5 rounded"
-                              style={{ color: prazoStyle.color, background: prazoStyle.bg, border: `1px solid ${prazoStyle.color}40` }}>
-                              {prazoStyle.label}
-                            </span>
+                            <span className={prazoStyle.badgeClass}>{prazoStyle.label}</span>
                           )}
                         </div>
                       </div>
                     )}
                     {link.liberadoEnvio && visibleCols.liberadoEnvio && (
                       <div>
-                        <span style={{ color: "rgba(184,160,96,0.6)" }}>Lib. Envio</span>
-                        <p className="px-1.5 py-0.5 rounded inline-block text-xs"
-                          style={{ color: "#4ade80", background: "rgba(74,222,128,0.10)" }}>
+                        <span className="cronograma-label">Lib. Envio</span>
+                        <p className="cronograma-date-badge-ok inline-block">
                           {formatDate(link.liberadoEnvio)}
                         </p>
                       </div>
                     )}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -362,12 +392,11 @@ export default function PublicView() {
 
         {/* ── DESKTOP TABLE ── */}
         {(viewMode === "table" || window.innerWidth >= 768) && (
-          <div className={`rounded-xl overflow-hidden ${viewMode === "cards" ? "hidden md:block" : ""}`}
-            style={{ border: "1px solid rgba(184,160,96,0.2)", background: "rgba(255,255,255,0.02)" }}>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[1100px]">
+          <div className={`zeglam-table-wrap ${viewMode === "cards" ? "hidden md:block" : ""}`}>
+            <div className="zeglam-table-scroll">
+              <table className="cronograma-table w-full min-w-[1100px]">
                 <thead>
-                  <tr style={{ background: "rgba(10,22,40,0.8)", borderBottom: "1px solid rgba(184,160,96,0.25)" }}>
+                  <tr>
                     {[
                       { label: "N°", col: "numero", field: null },
                       { label: "Nome do Link", col: "nome", field: null },
@@ -380,9 +409,11 @@ export default function PublicView() {
                       { label: "Prazo Máx.", col: "prazoMaxFinalizar", field: null },
                       { label: "Lib. Envio", col: null, field: "liberadoEnvio" },
                     ].filter(({ field }) => !field || visibleCols[field as keyof typeof visibleCols]).map(({ label, col }) => (
-                      <th key={label} className={`${thClass} ${col ? "cursor-pointer hover:opacity-80" : ""}`}
-                        style={{ color: "rgba(184,160,96,0.8)" }}
-                        onClick={col ? () => handleSort(col) : undefined}>
+                      <th
+                        key={label}
+                        className={`${thClass} ${col ? "cursor-pointer hover:opacity-90" : ""}`}
+                        onClick={col ? () => handleSort(col) : undefined}
+                      >
                         {label}{col && <SortIcon col={col} />}
                       </th>
                     ))}
@@ -391,67 +422,77 @@ export default function PublicView() {
                 <tbody>
                   {isLoading ? (
                     Array.from({ length: 8 }).map((_, i) => (
-                      <tr key={i} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                      <tr key={i} className="cronograma-row">
                         {Array.from({ length: 10 }).map((_, j) => (
-                          <td key={j} className="px-3 py-3">
-                            <div className="h-4 rounded animate-pulse" style={{ background: "rgba(255,255,255,0.06)" }} />
+                          <td key={j} className="cronograma-td">
+                            <div className="cronograma-skeleton h-4" />
                           </td>
                         ))}
                       </tr>
                     ))
                   ) : data?.data.length === 0 ? (
-                    <tr><td colSpan={12} className="text-center py-16" style={{ color: "rgba(255,255,255,0.35)" }}>
-                      Nenhum registro encontrado
-                    </td></tr>
+                    <tr>
+                      <td colSpan={12} className="cronograma-muted py-16 text-center">
+                        Nenhum registro encontrado
+                      </td>
+                    </tr>
                   ) : (
                     data?.data.map((link: any, idx: any) => {
                       const prazoStyle = getDateStyle(link.prazoMaxFinalizar, true);
                       const inicioStyle = getDateStyle(link.dataInicioSeparacao);
                       return (
-                        <tr key={link.id}
-                          style={{ borderBottom: "1px solid rgba(255,255,255,0.04)", background: idx % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)" }}
-                          onMouseEnter={e => (e.currentTarget.style.background = "rgba(184,160,96,0.05)")}
-                          onMouseLeave={e => (e.currentTarget.style.background = idx % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)")}>
-                          <td className={tdClass}><span className="font-mono text-xs" style={{ color: "rgba(184,160,96,0.7)" }}>#{link.numero}</span></td>
-                          <td className={tdClass}><span className="font-medium" style={{ color: "rgba(255,255,255,0.9)" }}>{link.nome}</span></td>
+                        <tr key={link.id} className="cronograma-row">
+                          <td className={tdClass}><span className="cronograma-num">#{link.numero}</span></td>
+                          <td className={`${tdClass} cronograma-td--nome`}><span className="cronograma-name">{link.nome}</span></td>
                           <td className={tdClass}><StatusBadge status={link.status} statusMap={statusMap} /></td>
-                          <td className={tdClass}><span style={{ color: "rgba(255,255,255,0.65)" }}>{link.departamento}</span></td>
-                          <td className={tdClass}><span className="text-xs" style={{ color: obsColor(link.observacoes) }}>{link.observacoes || "—"}</span></td>
-                          {visibleCols.encerramentoLink && <td className={tdClass}><span className="text-xs" style={{ color: link.encerramentoLink ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.2)" }}>{formatDate(link.encerramentoLink) || "—"}</span></td>}
-                          {visibleCols.romaneiosClientes && <td className={tdClass}><span className="text-xs" style={{ color: link.romaneiosClientes ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.2)" }}>{formatDate(link.romaneiosClientes) || "—"}</span></td>}
+                          <td className={tdClass}><span className="cronograma-cell">{link.departamento || "—"}</span></td>
+                          <td className={tdClass}><span className={obsClass(link.observacoes)}>{link.observacoes || "—"}</span></td>
+                          {visibleCols.encerramentoLink && (
+                            <td className={tdClass}>
+                              <span className={link.encerramentoLink ? "cronograma-cell" : "cronograma-empty"}>
+                                {formatDate(link.encerramentoLink) || "—"}
+                              </span>
+                            </td>
+                          )}
+                          {visibleCols.romaneiosClientes && (
+                            <td className={tdClass}>
+                              <span className={link.romaneiosClientes ? "cronograma-cell" : "cronograma-empty"}>
+                                {formatDate(link.romaneiosClientes) || "—"}
+                              </span>
+                            </td>
+                          )}
                           {visibleCols.dataInicioSeparacao && (
                             <td className={tdClass}>
                               {link.dataInicioSeparacao ? (
-                                <span className="text-xs px-1.5 py-0.5 rounded"
-                                  style={{ color: inicioStyle?.color ?? "rgba(255,255,255,0.65)", background: inicioStyle?.bg ?? "transparent" }}>
+                                <span className={inicioStyle?.badgeClass ?? "cronograma-cell"}>
                                   {formatDate(link.dataInicioSeparacao)}
                                 </span>
-                              ) : <span style={{ color: "rgba(255,255,255,0.2)" }}>—</span>}
+                              ) : (
+                                <span className="cronograma-empty">—</span>
+                              )}
                             </td>
                           )}
                           <td className={tdClass}>
                             {link.prazoMaxFinalizar ? (
                               <div className="flex items-center gap-1">
-                                <span className="text-xs px-1.5 py-0.5 rounded"
-                                  style={{ color: prazoStyle?.color ?? "rgba(255,255,255,0.65)", background: prazoStyle?.bg ?? "transparent" }}>
+                                <span className={prazoStyle?.badgeClass ?? "cronograma-cell"}>
                                   {formatDate(link.prazoMaxFinalizar)}
                                 </span>
                                 {prazoStyle?.label && (
-                                  <span className="text-xs font-bold px-1 py-0.5 rounded"
-                                    style={{ color: prazoStyle.color, background: prazoStyle.bg, border: `1px solid ${prazoStyle.color}40` }}>
-                                    {prazoStyle.label}
-                                  </span>
+                                  <span className={prazoStyle.badgeClass}>{prazoStyle.label}</span>
                                 )}
                               </div>
-                            ) : <span style={{ color: "rgba(255,255,255,0.2)" }}>—</span>}
+                            ) : (
+                              <span className="cronograma-empty">—</span>
+                            )}
                           </td>
                           {visibleCols.liberadoEnvio && (
                             <td className={tdClass}>
                               {link.liberadoEnvio ? (
-                                <span className="text-xs px-1.5 py-0.5 rounded" style={{ color: "#4ade80", background: "rgba(74,222,128,0.10)" }}>
-                                  {formatDate(link.liberadoEnvio)}
-                                </span>
-                              ) : <span style={{ color: "rgba(255,255,255,0.2)" }}>—</span>}
+                                <span className="cronograma-date-badge-ok">{formatDate(link.liberadoEnvio)}</span>
+                              ) : (
+                                <span className="cronograma-empty">—</span>
+                              )}
                             </td>
                           )}
                         </tr>
@@ -463,29 +504,40 @@ export default function PublicView() {
             </div>
 
             {totalPages > 1 && (
-              <div className="flex items-center justify-between px-4 py-3"
-                style={{ borderTop: "1px solid rgba(184,160,96,0.15)", background: "rgba(10,22,40,0.5)" }}>
-                <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>Página {page} de {totalPages}</p>
+              <div className="cronograma-footer flex items-center justify-between px-4 py-3">
+                <p className="text-xs text-muted-foreground">Página {page} de {totalPages}</p>
                 <div className="flex items-center gap-1">
-                  <Button variant="outline" size="icon" className="w-7 h-7"
-                    style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.6)", background: "transparent" }}
-                    onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                  >
                     <ChevronLeft className="w-4 h-4" />
                   </Button>
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                     const p = page <= 3 ? i + 1 : page + i - 2;
                     if (p < 1 || p > totalPages) return null;
                     return (
-                      <Button key={p} size="icon" className="w-7 h-7 text-xs"
-                        style={p === page
-                          ? { background: "linear-gradient(135deg,#c9a84c,#b8a060)", color: "#0a1628", border: "none" }
-                          : { borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.6)", background: "transparent", border: "1px solid rgba(184,160,96,0.3)" }}
-                        onClick={() => setPage(p)}>{p}</Button>
+                      <Button
+                        key={p}
+                        size="icon"
+                        variant={p === page ? "default" : "outline"}
+                        className="h-7 w-7 text-xs"
+                        onClick={() => setPage(p)}
+                      >
+                        {p}
+                      </Button>
                     );
                   })}
-                  <Button variant="outline" size="icon" className="w-7 h-7"
-                    style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.6)", background: "transparent" }}
-                    onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                    disabled={page === totalPages}
+                  >
                     <ChevronRight className="w-4 h-4" />
                   </Button>
                 </div>
@@ -497,21 +549,20 @@ export default function PublicView() {
         {/* Mobile pagination */}
         {viewMode === "cards" && totalPages > 1 && (
           <div className="flex items-center justify-center gap-2 md:hidden">
-            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-              style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.6)", background: "transparent" }}>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
               <ChevronLeft className="w-4 h-4" />
             </Button>
-            <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>{page} / {totalPages}</span>
-            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-              style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.6)", background: "transparent" }}>
+            <span className="text-xs text-muted-foreground">{page} / {totalPages}</span>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
         )}
 
         <div className="text-center py-2">
-          <p className="text-xs" style={{ color: "rgba(184,160,96,0.35)" }}>Grupo Zeglam — Cronograma de Links</p>
+          <p className="text-xs text-primary/35">Grupo Zeglam — Cronograma de Links</p>
         </div>
+      </div>
       </div>
     </div>
   );

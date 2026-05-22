@@ -11,8 +11,15 @@ import {
   Search, Filter, LayoutGrid, Plus, Trash2, Pencil, Settings,
   ChevronLeft, ChevronRight, ArrowUpDown, LogOut, Eye, X, Check, Palette, MessageSquare, Package, Truck, Users
 } from "lucide-react";
+import { ZeglamAuthCard } from "@/components/ZeglamAuthCard";
+import { ZeglamButton } from "@/components/ZeglamButton";
+import { ZeglamFloatingOrbs } from "@/components/ZeglamFloatingOrbs";
+import { ZeglamGlassPanel } from "@/components/ZeglamGlassPanel";
+import { ZeglamPageShell } from "@/components/ZeglamPageShell";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { ZEGLAM_LOGO_URL } from "@/lib/brand";
 
-const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663391333985/kfJrCdZgsWRY3f9mLQkwBL/zeglam-logo_80654552.png";
+const LOGO_URL = ZEGLAM_LOGO_URL;
 const PAGE_SIZE = 50;
 
 function formatDate(val: string | null | undefined) {
@@ -50,8 +57,8 @@ function EditCell({ value, onSave, type = "text", options }: {
 
   if (!editing) {
     return (
-      <div className="group flex items-center gap-1 cursor-pointer min-w-[60px]" onClick={start}>
-        <span style={{ color: value ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.2)" }}>
+      <div className="group flex min-h-[2.5rem] min-w-[60px] cursor-pointer items-center gap-2 py-1" onClick={start}>
+        <span style={{ color: value ? "rgba(var(--zeglam-text-rgb),0.85)" : "rgba(var(--zeglam-text-rgb),0.2)" }}>
           {type === "date" ? (formatDate(value) ?? "—") : (value || "—")}
         </span>
         <Pencil className="w-3 h-3 opacity-0 group-hover:opacity-60 transition-opacity flex-shrink-0" style={{ color: "#b8a060" }} />
@@ -63,7 +70,7 @@ function EditCell({ value, onSave, type = "text", options }: {
     return (
       <Select value={val} onValueChange={v => { setVal(v); onSave(v || null); setEditing(false); }}>
         <SelectTrigger className="h-7 text-xs w-[160px]"
-          style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.4)", color: "white" }}>
+          style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.4)", color: "rgb(var(--zeglam-text-rgb))" }}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent style={{ background: "#152340", border: "1px solid rgba(184,160,96,0.25)" }}>
@@ -87,7 +94,7 @@ function EditCell({ value, onSave, type = "text", options }: {
         onChange={e => setVal(e.target.value)}
         onKeyDown={e => { if (e.key === "Enter") save(); if (e.key === "Escape") cancel(); }}
         className="h-7 px-2 text-xs rounded"
-        style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.4)", color: "white", minWidth: 80, maxWidth: 160 }}
+        style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.4)", color: "rgb(var(--zeglam-text-rgb))", minWidth: 80, maxWidth: 160 }}
       />
       <button onClick={save} className="p-1 rounded hover:bg-green-500/20"><Check className="w-3 h-3" style={{ color: "#4ade80" }} /></button>
       <button onClick={cancel} className="p-1 rounded hover:bg-red-500/20"><X className="w-3 h-3" style={{ color: "#f87171" }} /></button>
@@ -111,7 +118,7 @@ function StatusEditCell({ value, statusMap, options, onSave }: {
 
   if (!editing) {
     return (
-      <div className="group flex items-center gap-1 cursor-pointer" onClick={start}>
+      <div className="group flex min-h-[2.5rem] cursor-pointer items-center gap-2 py-1" onClick={start}>
         <StatusBadge status={value || ""} statusMap={statusMap} />
         <Pencil className="w-3 h-3 opacity-0 group-hover:opacity-60 transition-opacity flex-shrink-0" style={{ color: "#b8a060" }} />
       </div>
@@ -121,7 +128,7 @@ function StatusEditCell({ value, statusMap, options, onSave }: {
   return (
     <Select value={val} onValueChange={v => { setVal(v); onSave(v || null); setEditing(false); }}>
       <SelectTrigger className="h-7 text-xs w-[160px]"
-        style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.4)", color: "white" }}>
+        style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.4)", color: "rgb(var(--zeglam-text-rgb))" }}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent style={{ background: "#152340", border: "1px solid rgba(184,160,96,0.25)" }}>
@@ -231,7 +238,7 @@ function StatusManager({ open, onClose, onStatusesChange }: { open: boolean; onC
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent style={{ background: "#0f1e38", border: "1px solid rgba(184,160,96,0.3)", color: "white", maxWidth: 480 }}>
+      <DialogContent style={{ background: "#0f1e38", border: "1px solid rgba(184,160,96,0.3)", color: "rgb(var(--zeglam-text-rgb))", maxWidth: 480 }}>
         <DialogHeader>
           <DialogTitle style={{ color: "#b8a060" }}>Gerenciar Status</DialogTitle>
         </DialogHeader>
@@ -245,14 +252,14 @@ function StatusManager({ open, onClose, onStatusesChange }: { open: boolean; onC
                     className="w-8 h-8 rounded cursor-pointer border-0 p-0.5" style={{ background: "transparent" }} />
                   <input value={editName} onChange={e => setEditName(e.target.value)}
                     className="flex-1 h-8 px-2 text-sm rounded"
-                    style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.4)", color: "white" }} />
+                    style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.4)", color: "rgb(var(--zeglam-text-rgb))" }} />
                   <button onClick={saveEdit} className="p-1.5 rounded hover:bg-green-500/20"><Check className="w-4 h-4" style={{ color: "#4ade80" }} /></button>
                   <button onClick={() => setEditId(null)} className="p-1.5 rounded hover:bg-white/10"><X className="w-4 h-4 opacity-50" /></button>
                 </>
               ) : (
                 <>
                   <span className="w-4 h-4 rounded-full flex-shrink-0" style={{ background: s.color }} />
-                  <span className="flex-1 text-sm" style={{ color: "rgba(255,255,255,0.85)" }}>{s.name}</span>
+                  <span className="flex-1 text-sm" style={{ color: "rgba(var(--zeglam-text-rgb),0.85)" }}>{s.name}</span>
                   <button onClick={() => {
                     setIsPending(true);
                     fetch(`/api/statuses/${s.id}`, {
@@ -281,7 +288,7 @@ function StatusManager({ open, onClose, onStatusesChange }: { open: boolean; onC
             placeholder="Nome do novo status..."
             onKeyDown={e => e.key === "Enter" && handleCreate()}
             className="flex-1 h-8 text-sm"
-            style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(184,160,96,0.25)", color: "white" }} />
+            style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(184,160,96,0.25)", color: "rgb(var(--zeglam-text-rgb))" }} />
           <Button size="sm" onClick={handleCreate}
             style={{ background: "linear-gradient(135deg,#c9a84c,#b8a060)", color: "#0a1628" }}>
             <Plus className="w-4 h-4" />
@@ -355,7 +362,7 @@ function DeptManager({ open, onClose, onDeptsChange }: { open: boolean; onClose:
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent style={{ background: "#0f1e38", border: "1px solid rgba(184,160,96,0.3)", color: "white", maxWidth: 420 }}>
+      <DialogContent style={{ background: "#0f1e38", border: "1px solid rgba(184,160,96,0.3)", color: "rgb(var(--zeglam-text-rgb))", maxWidth: 420 }}>
         <DialogHeader>
           <DialogTitle style={{ color: "#b8a060" }}>Gerenciar Departamentos</DialogTitle>
         </DialogHeader>
@@ -363,7 +370,7 @@ function DeptManager({ open, onClose, onDeptsChange }: { open: boolean; onClose:
           {isLoading ? <p className="text-sm opacity-50">Carregando...</p> : depts?.map(d => (
             <div key={d.id} className="flex items-center gap-2 p-2 rounded-lg"
               style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-              <span className="flex-1 text-sm" style={{ color: "rgba(255,255,255,0.85)" }}>{d.name}</span>
+              <span className="flex-1 text-sm" style={{ color: "rgba(var(--zeglam-text-rgb),0.85)" }}>{d.name}</span>
               <button onClick={() => {
                 setIsPending(true);
                 fetch(`/api/departments/${d.id}`, {
@@ -385,7 +392,7 @@ function DeptManager({ open, onClose, onDeptsChange }: { open: boolean; onClose:
             placeholder="Nome do departamento..."
             onKeyDown={e => e.key === "Enter" && handleCreate()}
             className="flex-1 h-8 text-sm"
-            style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(184,160,96,0.25)", color: "white" }} />
+            style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(184,160,96,0.25)", color: "rgb(var(--zeglam-text-rgb))" }} />
           <Button size="sm" onClick={handleCreate}
             style={{ background: "linear-gradient(135deg,#c9a84c,#b8a060)", color: "#0a1628" }}>
             <Plus className="w-4 h-4" />
@@ -406,7 +413,7 @@ function LinkModal({ open, onClose, link, statusOptions, deptOptions, onSaved }:
   onSaved: (savedLink: any, isNew: boolean) => void;
 }) {
   const [isPending, setIsPending] = useState(false);
-  
+
   const doCreate = async (payload: any) => {
     setIsPending(true);
     try {
@@ -426,7 +433,7 @@ function LinkModal({ open, onClose, link, statusOptions, deptOptions, onSaved }:
       setIsPending(false);
     }
   };
-  
+
   const doUpdate = async (id: number, payload: any) => {
     setIsPending(true);
     try {
@@ -463,14 +470,14 @@ function LinkModal({ open, onClose, link, statusOptions, deptOptions, onSaved }:
 
   const set = (k: string, v: string) => {
     const newForm = { ...form, [k]: v };
-    
+
     // Auto-calculate dataInicioSeparacao and prazoMaxFinalizar when romaneiosClientes is set
     if (k === "romaneiosClientes" && v) {
       const { inicio, prazo } = calcDatesFromRomaneio(v);
       newForm.dataInicioSeparacao = inicio;
       newForm.prazoMaxFinalizar = prazo;
     }
-    
+
     setForm(newForm);
   };
 
@@ -493,12 +500,12 @@ function LinkModal({ open, onClose, link, statusOptions, deptOptions, onSaved }:
     else doCreate(payload);
   };
 
-  const fieldStyle = { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(184,160,96,0.25)", color: "white" };
+  const fieldStyle = { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(184,160,96,0.25)", color: "rgb(var(--zeglam-text-rgb))" };
   const labelStyle = { color: "rgba(184,160,96,0.8)", fontSize: 11, fontWeight: 600, textTransform: "uppercase" as const, letterSpacing: "0.05em" };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent style={{ background: "#0f1e38", border: "1px solid rgba(184,160,96,0.3)", color: "white", maxWidth: 560 }}>
+      <DialogContent style={{ background: "#0f1e38", border: "1px solid rgba(184,160,96,0.3)", color: "rgb(var(--zeglam-text-rgb))", maxWidth: 560 }}>
         <DialogHeader>
           <DialogTitle style={{ color: "#b8a060" }}>{link ? "Editar Link" : "Novo Link"}</DialogTitle>
         </DialogHeader>
@@ -574,7 +581,7 @@ function LinkModal({ open, onClose, link, statusOptions, deptOptions, onSaved }:
           </div>
         </div>
         <DialogFooter className="pt-2" style={{ borderTop: "1px solid rgba(184,160,96,0.15)" }}>
-          <Button variant="ghost" onClick={onClose} style={{ color: "rgba(255,255,255,0.5)" }}>Cancelar</Button>
+          <Button variant="ghost" onClick={onClose} style={{ color: "rgba(var(--zeglam-text-rgb),0.5)" }}>Cancelar</Button>
           <Button onClick={handleSubmit} disabled={isPending}
             style={{ background: "linear-gradient(135deg,#c9a84c,#b8a060)", color: "#0a1628" }}>
             {link ? "Salvar" : "Criar Link"}
@@ -877,40 +884,32 @@ export default function AdminView() {
       style={{ color: sortBy === col ? "#b8a060" : undefined }} />
   );
 
-  const thClass = "px-3 py-3.5 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap select-none";
-  const tdClass = "px-3 py-2 border-b border-white/5 text-sm";
+  const thClass = "cronograma-th";
+  const tdClass = "cronograma-td";
 
   // Login gate
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: "#0f1e38" }}>
-      <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: "#b8a060", borderTopColor: "transparent" }} />
-    </div>
+    <ZeglamPageShell centered>
+      <div className="h-10 w-10 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+    </ZeglamPageShell>
   );
 
   if (!isAuthenticated) return (
-    <div className="min-h-screen flex flex-col items-center justify-center" style={{ background: "#0f1e38" }}>
-      <div className="w-full max-w-sm mx-auto p-8 rounded-2xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(184,160,96,0.25)" }}>
-        <div className="flex flex-col items-center gap-4 mb-8">
-          <img src={LOGO_URL} alt="Grupo Zeglam" className="h-14 w-auto" />
-          <div className="text-center">
-            <h1 className="text-lg font-semibold" style={{ color: "#b8a060" }}>Área Administrativa</h1>
-            <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.4)" }}>Faça login para continuar</p>
-          </div>
-        </div>
+    <ZeglamPageShell centered className="p-4">
+      <ZeglamAuthCard title="Área administrativa" description="Faça login para gerenciar o cronograma">
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-medium mb-1.5" style={{ color: "rgba(255,255,255,0.6)" }}>Usuário</label>
+            <label className="zeglam-field-label">Usuário</label>
             <Input
               value={loginUser}
               onChange={e => setLoginUser(e.target.value)}
               placeholder="Usuário"
               autoComplete="username"
               onKeyDown={e => e.key === "Enter" && doLogin(loginUser, loginPass)}
-              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(184,160,96,0.25)", color: "white" }}
             />
           </div>
           <div>
-            <label className="block text-xs font-medium mb-1.5" style={{ color: "rgba(255,255,255,0.6)" }}>Senha</label>
+            <label className="zeglam-field-label">Senha</label>
             <div className="relative">
               <Input
                 type={showPass ? "text" : "password"}
@@ -918,80 +917,84 @@ export default function AdminView() {
                 onChange={e => setLoginPass(e.target.value)}
                 placeholder="Senha"
                 autoComplete="current-password"
+                className="pr-10"
                 onKeyDown={e => e.key === "Enter" && doLogin(loginUser, loginPass)}
-                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(184,160,96,0.25)", color: "white", paddingRight: "2.5rem" }}
               />
-              <button type="button" onClick={() => setShowPass(v => !v)}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-80"
-                style={{ color: "white" }}>
-                {showPass ? <Eye className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              <button
+                type="button"
+                onClick={() => setShowPass(v => !v)}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary"
+              >
+                <Eye className="h-4 w-4" />
               </button>
             </div>
           </div>
-          <Button
-            className="w-full font-semibold mt-2"
-            disabled={loginPending || !loginUser || !loginPass}
+          <ZeglamButton
+            size="lg"
+            className="w-full"
+            disabled={!loginUser || !loginPass}
+            loading={loginPending}
             onClick={() => doLogin(loginUser, loginPass)}
-            style={{ background: "linear-gradient(135deg,#c9a84c,#b8a060)", color: "#0a1628" }}>
+          >
             {loginPending ? "Entrando..." : "Entrar"}
-          </Button>
+          </ZeglamButton>
         </div>
-      </div>
-    </div>
+      </ZeglamAuthCard>
+    </ZeglamPageShell>
   );
 
   return (
-    <div className="min-h-screen" style={{ background: "#0f1e38" }}>
-      {/* Header */}
-      <header style={{ background: "linear-gradient(180deg,#0a1628 0%,#0f1e38 100%)", borderBottom: "1px solid rgba(184,160,96,0.25)" }}>
-        <div className="container py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+    <div className="zeglam-page relative min-h-screen">
+      <div className="zeglam-page-glow pointer-events-none absolute inset-0" aria-hidden />
+      <ZeglamFloatingOrbs />
+      <header className="zeglam-header relative z-10">
+        <div className="w-full min-w-0 px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+            <div className="flex shrink-0 items-center gap-4">
               <img src={LOGO_URL} alt="Grupo Zeglam" className="h-12 w-auto" />
               <div className="hidden sm:block h-8 w-px" style={{ background: "rgba(184,160,96,0.3)" }} />
               <div className="hidden sm:block">
                 <p className="text-xs font-medium tracking-widest uppercase" style={{ color: "#b8a060" }}>Administração</p>
-                <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>Gestão de Links</p>
+                <p className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.4)" }}>Gestão de Links</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button onClick={() => setLocation('/')} variant="ghost" className="text-slate-400 hover:text-white">
+            <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">
+              <ThemeToggle size="sm" />
+              <Button onClick={() => setLocation('/')} variant="ghost" className="text-muted-foreground hover:text-foreground">
                 <ChevronLeft className="w-5 h-5" />
               </Button>
               <a href="/" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-white/5"
-                style={{ color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                style={{ color: "rgba(var(--zeglam-text-rgb),0.5)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <Eye className="w-3.5 h-3.5" /> Visualização Pública
               </a>
               <Button variant="ghost" size="sm" onClick={() => setShowStatusMgr(true)}
-                className="text-xs gap-1.5" style={{ color: "rgba(255,255,255,0.6)", border: "1px solid rgba(184,160,96,0.2)" }}>
+                className="text-xs gap-1.5" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)", border: "1px solid rgba(184,160,96,0.2)" }}>
                 <Palette className="w-3.5 h-3.5" style={{ color: "#b8a060" }} /> Status
               </Button>
 
               <Button variant="ghost" size="sm" onClick={() => setShowDeptMgr(true)}
-                className="text-xs gap-1.5" style={{ color: "rgba(255,255,255,0.6)", border: "1px solid rgba(184,160,96,0.2)" }}>
+                className="text-xs gap-1.5" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)", border: "1px solid rgba(184,160,96,0.2)" }}>
                 <Settings className="w-3.5 h-3.5" style={{ color: "#b8a060" }} /> Departamentos
               </Button>
                  <a href="/gerenciamentofreteadmin" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-white/5"
-                style={{ color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.1)" }}
+                style={{ color: "rgba(var(--zeglam-text-rgb),0.5)", border: "1px solid rgba(255,255,255,0.1)" }}
               >
                 <Truck className="w-3.5 h-3.5" /> Gerenciar Fretes
               </a>
-              <a href="/admin/users" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-white/5" style={{ color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <a href="/admin/users" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-white/5" style={{ color: "rgba(var(--zeglam-text-rgb),0.5)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <Users className="w-3.5 h-3.5" /> Gerenciar Usuários
               </a>
-              <a href="/admin/importar-links" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-white/5" style={{ color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <a href="/admin/importar-links" className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-colors hover:bg-white/5" style={{ color: "rgba(var(--zeglam-text-rgb),0.5)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <Plus className="w-3.5 h-3.5" /> Importar Links via IA
               </a>
-              <Button size="sm" onClick={() => setShowAddLink(true)}
-                className="text-xs gap-1.5"
-                style={{ background: "linear-gradient(135deg,#c9a84c,#b8a060)", color: "#0a1628" }}>
+              <ZeglamButton size="sm" onClick={() => setShowAddLink(true)} className="text-xs">
                 <Plus className="w-3.5 h-3.5" /> Novo Link
-              </Button>
-              <span className="hidden sm:block text-xs px-2 py-1 rounded" style={{ color: "rgba(255,255,255,0.4)", background: "rgba(255,255,255,0.04)" }}>
+              </ZeglamButton>
+              <span className="hidden sm:block text-xs px-2 py-1 rounded" style={{ color: "rgba(var(--zeglam-text-rgb),0.4)", background: "rgba(255,255,255,0.04)" }}>
                 {adminUser?.name}
               </span>
               <Button variant="ghost" size="sm" onClick={() => doLogout()}
-                className="text-xs gap-1.5" style={{ color: "rgba(255,255,255,0.5)" }}>
+                className="text-xs gap-1.5" style={{ color: "rgba(var(--zeglam-text-rgb),0.5)" }}>
                 <LogOut className="w-3.5 h-3.5" /> Sair
               </Button>
             </div>
@@ -999,23 +1002,20 @@ export default function AdminView() {
         </div>
       </header>
 
-      <div className="container py-6 space-y-5">
-        {/* Stats */}
-        {/* Cards de status removidos - deixar seco */}
-
+      <div className="relative z-10 w-full min-w-0 px-4 sm:px-6 lg:px-8 py-6 space-y-5">
         {/* Filters */}
-        <div className="rounded-xl p-3 flex flex-wrap gap-3 items-center"
-          style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(184,160,96,0.15)" }}>
+        <ZeglamGlassPanel delay={0.1} className="flex min-w-0 flex-col gap-4">
+          <div className="flex min-w-0 flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px] max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "#b8a060" }} />
             <Input placeholder="Buscar por nome..." value={search}
               onChange={e => { setSearch(e.target.value); setPage(1); }}
               className="pl-9 text-sm"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }} />
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }} />
           </div>
           <Select value={statusFilter} onValueChange={v => { setStatusFilter(v); setPage(1); }}>
             <SelectTrigger className="w-[170px] text-sm"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}>
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}>
               <Filter className="w-3.5 h-3.5 mr-1.5" style={{ color: "#b8a060" }} />
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -1033,7 +1033,7 @@ export default function AdminView() {
           </Select>
           <Select value={deptFilter} onValueChange={v => { setDeptFilter(v); setPage(1); }}>
             <SelectTrigger className="w-[170px] text-sm"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}>
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}>
               <LayoutGrid className="w-3.5 h-3.5 mr-1.5" style={{ color: "#b8a060" }} />
               <SelectValue placeholder="Departamento" />
             </SelectTrigger>
@@ -1045,21 +1045,25 @@ export default function AdminView() {
             </SelectContent>
           </Select>
           <input type="month" value={monthFilter} onChange={e => { setMonthFilter(e.target.value); setPage(1); }}
-            className="px-3 py-2 text-sm rounded" 
-            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }} />
+            className="px-3 py-2 text-sm rounded"
+            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }} />
           {(search || statusFilter !== "all" || deptFilter !== "all" || monthFilter) && (
             <Button variant="ghost" size="sm" onClick={() => { setSearch(""); setStatusFilter("all"); setDeptFilter("all"); setMonthFilter(""); setPage(1); }}
-              className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+              className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.4)" }}>
               Limpar ×
             </Button>
           )}
-          <div className="ml-auto flex items-center gap-2">
+          </div>
+          <div className="flex min-w-0 flex-wrap items-center gap-2 border-t border-border/40 pt-3">
+            <span className="w-full text-xs font-medium uppercase tracking-wider text-muted-foreground sm:w-auto sm:mr-2">
+              Colunas
+            </span>
             <Button variant="ghost" size="sm" onClick={() => {
               const newVal = !visibleCols.conferenciaEstoque;
               setVisibleCols(prev => ({ ...prev, conferenciaEstoque: newVal }));
               fetch('/api/column-settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ conferenciaEstoque: newVal }) });
             }}
-              className="text-xs" style={{ color: visibleCols.conferenciaEstoque ? "#b8a060" : "rgba(255,255,255,0.3)" }}>
+              className="text-xs" style={{ color: visibleCols.conferenciaEstoque ? "#b8a060" : "rgba(var(--zeglam-text-rgb),0.3)" }}>
               CONF. ESTOQUE
             </Button>
             <Button variant="ghost" size="sm" onClick={() => {
@@ -1067,7 +1071,7 @@ export default function AdminView() {
               setVisibleCols(prev => ({ ...prev, postadoFornecedor: newVal }));
               fetch('/api/column-settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ postadoFornecedor: newVal }) });
             }}
-              className="text-xs" style={{ color: visibleCols.postadoFornecedor ? "#b8a060" : "rgba(255,255,255,0.3)" }}>
+              className="text-xs" style={{ color: visibleCols.postadoFornecedor ? "#b8a060" : "rgba(var(--zeglam-text-rgb),0.3)" }}>
               POST. FORN.
             </Button>
             <Button variant="ghost" size="sm" onClick={() => {
@@ -1075,7 +1079,7 @@ export default function AdminView() {
               setVisibleCols(prev => ({ ...prev, romaneiosClientes: newVal }));
               fetch('/api/column-settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ romaneiosClientes: newVal }) });
             }}
-              className="text-xs" style={{ color: visibleCols.romaneiosClientes ? "#b8a060" : "rgba(255,255,255,0.3)" }}>
+              className="text-xs" style={{ color: visibleCols.romaneiosClientes ? "#b8a060" : "rgba(var(--zeglam-text-rgb),0.3)" }}>
               ROMANEIOS
             </Button>
             <Button variant="ghost" size="sm" onClick={() => {
@@ -1083,7 +1087,7 @@ export default function AdminView() {
               setVisibleCols(prev => ({ ...prev, encerramentoLink: newVal }));
                       fetch('/api/column-settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ encerramentoLink: newVal, encerramentoHorario: newVal }) });
             }}
-               className="text-xs" style={{ color: visibleCols.encerramentoLink ? "#b8a060" : "rgba(255,255,255,0.3)" }}>
+               className="text-xs" style={{ color: visibleCols.encerramentoLink ? "#b8a060" : "rgba(var(--zeglam-text-rgb),0.3)" }}>
                ENCERRAMENTO / HORÁRIO
             </Button>
             <Button variant="ghost" size="sm" onClick={() => {
@@ -1091,7 +1095,7 @@ export default function AdminView() {
               setVisibleCols(prev => ({ ...prev, dataInicioSeparacao: newVal }));
               fetch('/api/column-settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ dataInicioSeparacao: newVal }) });
             }}
-              className="text-xs" style={{ color: visibleCols.dataInicioSeparacao ? "#b8a060" : "rgba(255,255,255,0.3)" }}>
+              className="text-xs" style={{ color: visibleCols.dataInicioSeparacao ? "#b8a060" : "rgba(var(--zeglam-text-rgb),0.3)" }}>
               INÍCIO SEP.
             </Button>
             <Button variant="ghost" size="sm" onClick={() => {
@@ -1099,14 +1103,14 @@ export default function AdminView() {
               setVisibleCols(prev => ({ ...prev, liberadoEnvio: newVal }));
               fetch('/api/column-settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ liberadoEnvio: newVal }) });
             }}
-              className="text-xs" style={{ color: visibleCols.liberadoEnvio ? "#b8a060" : "rgba(255,255,255,0.3)" }}>
+              className="text-xs" style={{ color: visibleCols.liberadoEnvio ? "#b8a060" : "rgba(var(--zeglam-text-rgb),0.3)" }}>
               LIB. ENVIO
             </Button>
+            <div className="ml-auto text-xs text-muted-foreground">
+              <strong className="text-foreground/80">{data?.total ?? 0}</strong> registros
+            </div>
           </div>
-          <div className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
-            <strong style={{ color: "rgba(255,255,255,0.7)" }}>{data?.total ?? 0}</strong> registros
-          </div>
-        </div>
+        </ZeglamGlassPanel>
 
         {/* Bulk action bar */}
         {selectedIds.size > 0 && (
@@ -1118,7 +1122,7 @@ export default function AdminView() {
             <Button size="sm" variant="outline"
               onClick={() => setSelectedIds(new Set())}
               className="text-xs h-7 px-3"
-              style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.5)", background: "transparent" }}>
+              style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(var(--zeglam-text-rgb),0.5)", background: "transparent" }}>
               Cancelar seleção
             </Button>
             <Button size="sm"
@@ -1131,13 +1135,12 @@ export default function AdminView() {
         )}
 
         {/* Table */}
-        <div className="rounded-xl overflow-hidden"
-          style={{ border: "1px solid rgba(184,160,96,0.2)", background: "rgba(255,255,255,0.02)" }}>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[1200px]">
+        <div className="zeglam-table-wrap">
+          <div className="zeglam-table-scroll">
+            <table className="cronograma-table cronograma-table--admin">
               <thead>
-                <tr style={{ background: "rgba(10,22,40,0.8)", borderBottom: "1px solid rgba(184,160,96,0.25)" }}>
-                  <th className="px-3 py-3.5 w-8">
+                <tr>
+                  <th className="cronograma-th w-10 px-3">
                     <input type="checkbox"
                       className="w-3.5 h-3.5 cursor-pointer accent-amber-500"
                       checked={(data?.result?.data ?? []).length > 0 && (data?.result?.data ?? []).every((l: any) => selectedIds.has(l.id))}
@@ -1172,9 +1175,11 @@ export default function AdminView() {
                     const field = fieldMap[label];
                     return !field || visibleCols[field as keyof typeof visibleCols];
                   }).map(({ label, col }) => (
-                    <th key={label} className={`${thClass} ${col ? "cursor-pointer hover:opacity-80" : ""}`}
-                      style={{ color: "rgba(184,160,96,0.8)" }}
-                      onClick={col ? () => handleSort(col) : undefined}>
+                    <th
+                      key={label}
+                      className={`${thClass} ${col ? "cursor-pointer hover:opacity-90" : ""} ${label === "Ações" ? "cronograma-th--acoes" : ""}`}
+                      onClick={col ? () => handleSort(col) : undefined}
+                    >
                       {label}{col && <SortIcon col={col} />}
                     </th>
                   ))}
@@ -1183,16 +1188,16 @@ export default function AdminView() {
               <tbody>
                 {isLoading ? (
                   Array.from({ length: 8 }).map((_, i) => (
-                    <tr key={i} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                    <tr key={i} className="cronograma-row">
                       {Array.from({ length: 13 }).map((_, j) => (
-                        <td key={j} className="px-3 py-3">
+                        <td key={j} className="cronograma-td">
                           <div className="h-4 rounded animate-pulse" style={{ background: "rgba(255,255,255,0.06)" }} />
                         </td>
                       ))}
                     </tr>
                   ))
                 ) : (data?.result?.data?.length ?? 0) === 0 ? (
-                  <tr><td colSpan={13} className="text-center py-16" style={{ color: "rgba(255,255,255,0.35)" }}>
+                  <tr><td colSpan={13} className="text-center py-16" style={{ color: "rgba(var(--zeglam-text-rgb),0.35)" }}>
                     Nenhum registro encontrado
                   </td></tr>
                 ) : (
@@ -1204,15 +1209,15 @@ export default function AdminView() {
                       ? link.observacoes.toLowerCase().includes("cancel") ? "#f87171"
                       : link.observacoes.toLowerCase().includes("liberad") ? "#4ade80"
                       : link.observacoes.toLowerCase().includes("aguard") ? "#fbbf24"
-                      : "rgba(255,255,255,0.75)"
-                      : "rgba(255,255,255,0.3)";
+                      : "rgba(var(--zeglam-text-rgb),0.75)"
+                      : "rgba(var(--zeglam-text-rgb),0.3)";
 
                     return (
-                      <tr key={link.id}
-                        style={{ borderBottom: "1px solid rgba(255,255,255,0.04)", background: selectedIds.has(link.id) ? "rgba(184,160,96,0.08)" : idx % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)" }}
-                        onMouseEnter={e => { if (!selectedIds.has(link.id)) e.currentTarget.style.background = "rgba(184,160,96,0.05)"; }}
-                        onMouseLeave={e => { if (!selectedIds.has(link.id)) e.currentTarget.style.background = idx % 2 === 0 ? "transparent" : "rgba(255,255,255,0.01)"; }}>
-                        <td className="px-3 py-2 border-b border-white/5 w-8">
+                      <tr
+                        key={link.id}
+                        className={`cronograma-row ${selectedIds.has(link.id) ? "ring-1 ring-inset ring-primary/40 bg-primary/10" : ""}`}
+                      >
+                        <td className={`${tdClass} w-10`}>
                           <input type="checkbox"
                             className="w-3.5 h-3.5 cursor-pointer accent-amber-500"
                             checked={selectedIds.has(link.id)}
@@ -1222,7 +1227,7 @@ export default function AdminView() {
                         <td className={tdClass}>
                           <EditCell value={String(link.numero)} onSave={v => handleCellSave(link.id, "numero", v)} type="text" />
                         </td>
-                        <td className={tdClass} style={{ minWidth: 180 }}>
+                        <td className={`${tdClass} cronograma-td--nome`}>
                           <EditCell value={link.nome} onSave={v => handleCellSave(link.id, "nome", v)} />
                         </td>
                         <td className={tdClass}>
@@ -1285,7 +1290,7 @@ export default function AdminView() {
                           </div>
                         </td>
                         {/* Actions */}
-                        <td className={tdClass}>
+                        <td className={`${tdClass} cronograma-td--acoes`}>
                           <div className="flex items-center gap-1">
                             <button onClick={() => setEditLink(link)}
                               className="p-1.5 rounded hover:bg-white/10 opacity-50 hover:opacity-100 transition-opacity">
@@ -1304,14 +1309,20 @@ export default function AdminView() {
               </tbody>
             </table>
           </div>
+          <p className="zeglam-table-scroll-hint md:hidden">
+            Deslize para a direita para ver todas as colunas →
+          </p>
+          <p className="zeglam-table-scroll-hint hidden md:block">
+            Arraste a barra de rolagem até o final (→) para ver a coluna Ações completa, sem corte
+          </p>
 
           {totalPages > 1 && (
             <div className="flex items-center justify-between px-4 py-3"
               style={{ borderTop: "1px solid rgba(184,160,96,0.15)", background: "rgba(10,22,40,0.5)" }}>
-              <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>Página {page} de {totalPages}</p>
+              <p className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.4)" }}>Página {page} de {totalPages}</p>
               <div className="flex items-center gap-1">
                 <Button variant="outline" size="icon" className="w-7 h-7"
-                  style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.6)", background: "transparent" }}
+                  style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(var(--zeglam-text-rgb),0.6)", background: "transparent" }}
                   onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
                   <ChevronLeft className="w-4 h-4" />
                 </Button>
@@ -1322,12 +1333,12 @@ export default function AdminView() {
                     <Button key={p} size="icon" className="w-7 h-7 text-xs"
                       style={p === page
                         ? { background: "linear-gradient(135deg,#c9a84c,#b8a060)", color: "#0a1628", border: "none" }
-                        : { borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.6)", background: "transparent", border: "1px solid rgba(184,160,96,0.3)" }}
+                        : { borderColor: "rgba(184,160,96,0.3)", color: "rgba(var(--zeglam-text-rgb),0.6)", background: "transparent", border: "1px solid rgba(184,160,96,0.3)" }}
                       onClick={() => setPage(p)}>{p}</Button>
                   );
                 })}
                 <Button variant="outline" size="icon" className="w-7 h-7"
-                  style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.6)", background: "transparent" }}
+                  style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(var(--zeglam-text-rgb),0.6)", background: "transparent" }}
                   onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
                   <ChevronRight className="w-4 h-4" />
                 </Button>
@@ -1362,17 +1373,17 @@ export default function AdminView() {
 
       {/* Bulk Delete Confirmation Dialog */}
       <Dialog open={bulkDeleteConfirm} onOpenChange={setBulkDeleteConfirm}>
-        <DialogContent style={{ background: "#0f1e38", border: "1px solid rgba(248,113,113,0.3)", color: "white", maxWidth: 400 }}>
+        <DialogContent style={{ background: "#0f1e38", border: "1px solid rgba(248,113,113,0.3)", color: "rgb(var(--zeglam-text-rgb))", maxWidth: 400 }}>
           <DialogHeader>
             <DialogTitle style={{ color: "#f87171" }}>Confirmar Exclusão em Lote</DialogTitle>
           </DialogHeader>
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.65)" }}>
+          <p className="text-sm" style={{ color: "rgba(var(--zeglam-text-rgb),0.65)" }}>
             Tem certeza que deseja excluir <strong style={{ color: "#f87171" }}>{selectedIds.size} link(s)</strong>? Esta ação não pode ser desfeita.
           </p>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setBulkDeleteConfirm(false)} style={{ color: "rgba(255,255,255,0.5)" }}>Cancelar</Button>
+            <Button variant="ghost" onClick={() => setBulkDeleteConfirm(false)} style={{ color: "rgba(var(--zeglam-text-rgb),0.5)" }}>Cancelar</Button>
             <Button onClick={handleDeleteMultiple}
-              style={{ background: "#f87171", color: "white" }}>
+              style={{ background: "#f87171", color: "rgb(var(--zeglam-text-rgb))" }}>
               Excluir {selectedIds.size} link(s)
             </Button>
           </DialogFooter>
@@ -1380,18 +1391,18 @@ export default function AdminView() {
       </Dialog>
 
       <Dialog open={deleteConfirm !== null} onOpenChange={(_open: boolean) => setDeleteConfirm(null)}>
-        <DialogContent style={{ background: "#0f1e38", border: "1px solid rgba(248,113,113,0.3)", color: "white", maxWidth: 380 }}>
+        <DialogContent style={{ background: "#0f1e38", border: "1px solid rgba(248,113,113,0.3)", color: "rgb(var(--zeglam-text-rgb))", maxWidth: 380 }}>
           <DialogHeader>
             <DialogTitle style={{ color: "#f87171" }}>Confirmar Exclusão</DialogTitle>
           </DialogHeader>
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.65)" }}>
+          <p className="text-sm" style={{ color: "rgba(var(--zeglam-text-rgb),0.65)" }}>
             Tem certeza que deseja excluir este link? Esta ação não pode ser desfeita.
           </p>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setDeleteConfirm(null)} style={{ color: "rgba(255,255,255,0.5)" }}>Cancelar</Button>
+            <Button variant="ghost" onClick={() => setDeleteConfirm(null)} style={{ color: "rgba(var(--zeglam-text-rgb),0.5)" }}>Cancelar</Button>
             <Button onClick={() => deleteConfirm !== null && deleteMut.mutate(deleteConfirm)}
               disabled={false}
-              style={{ background: "#f87171", color: "white" }}>
+              style={{ background: "#f87171", color: "rgb(var(--zeglam-text-rgb))" }}>
               Excluir
             </Button>
           </DialogFooter>

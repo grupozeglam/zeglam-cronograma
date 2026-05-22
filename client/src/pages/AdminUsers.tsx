@@ -337,7 +337,7 @@ export function AdminUsers() {
             <button
               onClick={() => setLocation("/admin")}
               className="p-2 rounded-lg hover:bg-white/5 transition-colors"
-              style={{ color: "rgba(255,255,255,0.6)" }}
+              style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -371,16 +371,16 @@ export function AdminUsers() {
             <table className="w-full text-sm">
               <thead style={{ background: "rgba(184,160,96,0.08)" }}>
                 <tr>
-                  <th className="px-4 py-3 text-left" style={{ color: "rgba(255,255,255,0.6)" }}>Nome</th>
-                  <th className="px-4 py-3 text-left" style={{ color: "rgba(255,255,255,0.6)" }}>Usuário</th>
-                  <th className="px-4 py-3 text-right" style={{ color: "rgba(255,255,255,0.6)" }}>Ações</th>
+                  <th className="px-4 py-3 text-left" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Nome</th>
+                  <th className="px-4 py-3 text-left" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Usuário</th>
+                  <th className="px-4 py-3 text-right" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {Array.isArray(adminUsers) && adminUsers.map((admin) => (
                   <tr key={admin.id} style={{ borderTop: "1px solid rgba(184,160,96,0.1)" }}>
-                    <td className="px-4 py-3" style={{ color: "rgba(255,255,255,0.85)" }}>{admin.name}</td>
-                    <td className="px-4 py-3" style={{ color: "rgba(255,255,255,0.6)" }}>{admin.username}</td>
+                    <td className="px-4 py-3" style={{ color: "rgba(var(--zeglam-text-rgb),0.85)" }}>{admin.name}</td>
+                    <td className="px-4 py-3" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>{admin.username}</td>
                     <td className="px-4 py-3 text-right flex gap-2 justify-end">
                       <Button
                         variant="ghost"
@@ -412,7 +412,7 @@ export function AdminUsers() {
           </div>
 
           {(!Array.isArray(adminUsers) || adminUsers.length === 0) && (
-            <div className="text-center py-8" style={{ color: "rgba(255,255,255,0.4)" }}>
+            <div className="text-center py-8" style={{ color: "rgba(var(--zeglam-text-rgb),0.4)" }}>
               Nenhum admin criado ainda
             </div>
           )}
@@ -438,18 +438,18 @@ export function AdminUsers() {
             <table className="w-full text-sm">
               <thead style={{ background: "rgba(184,160,96,0.08)" }}>
                 <tr>
-                  <th className="px-4 py-3 text-left" style={{ color: "rgba(255,255,255,0.6)" }}>Nome</th>
-                  <th className="px-4 py-3 text-left" style={{ color: "rgba(255,255,255,0.6)" }}>Usuário</th>
-                  <th className="px-4 py-3 text-left" style={{ color: "rgba(255,255,255,0.6)" }}>Painel</th>
-                  <th className="px-4 py-3 text-right" style={{ color: "rgba(255,255,255,0.6)" }}>Ações</th>
+                  <th className="px-4 py-3 text-left" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Nome</th>
+                  <th className="px-4 py-3 text-left" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Usuário</th>
+                  <th className="px-4 py-3 text-left" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Painel</th>
+                  <th className="px-4 py-3 text-right" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {Array.isArray(suppliers) && suppliers.map((supplier) => (
                   <tr key={supplier.id} style={{ borderTop: "1px solid rgba(184,160,96,0.1)" }}>
-                    <td className="px-4 py-3" style={{ color: "rgba(255,255,255,0.85)" }}>{supplier.name}</td>
-                    <td className="px-4 py-3" style={{ color: "rgba(255,255,255,0.6)" }}>{supplier.username}</td>
-                    <td className="px-4 py-3" style={{ color: "rgba(255,255,255,0.6)" }}>
+                    <td className="px-4 py-3" style={{ color: "rgba(var(--zeglam-text-rgb),0.85)" }}>{supplier.name}</td>
+                    <td className="px-4 py-3" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>{supplier.username}</td>
+                    <td className="px-4 py-3" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>
                       <span style={{ background: supplier.panel === "sp" ? "rgba(59,130,246,0.2)" : "rgba(168,85,247,0.2)", color: supplier.panel === "sp" ? "#3b82f6" : "#a855f7", padding: "0.25rem 0.75rem", borderRadius: "0.375rem", fontSize: "0.75rem", fontWeight: "600" }}>
                         {supplier.panel === "sp" ? "São Paulo" : "Limeira"}
                       </span>
@@ -498,7 +498,7 @@ export function AdminUsers() {
           </div>
 
           {(!Array.isArray(suppliers) || suppliers.length === 0) && (
-            <div className="text-center py-8" style={{ color: "rgba(255,255,255,0.4)" }}>
+            <div className="text-center py-8" style={{ color: "rgba(var(--zeglam-text-rgb),0.4)" }}>
               Nenhum fornecedor criado ainda
             </div>
           )}
@@ -528,34 +528,34 @@ export function AdminUsers() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Nome</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Nome</label>
               <Input
                 value={adminForm.name}
                 onChange={(e) => setAdminForm({ ...adminForm, name: e.target.value })}
                 placeholder="Ex: João Silva"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Usuário</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Usuário</label>
               <Input
                 value={adminForm.username}
                 onChange={(e) => setAdminForm({ ...adminForm, username: e.target.value })}
                 placeholder="Ex: joao.silva"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Senha (mínimo 8 caracteres)</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Senha (mínimo 8 caracteres)</label>
               <Input
                 type="password"
                 value={adminForm.password}
                 onChange={(e) => setAdminForm({ ...adminForm, password: e.target.value })}
                 placeholder="••••••••"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
           </div>
@@ -563,7 +563,7 @@ export function AdminUsers() {
             <Button
               variant="outline"
               onClick={() => setShowAddAdmin(false)}
-              style={{ borderColor: "rgba(184,160,96,0.2)", color: "rgba(255,255,255,0.6)" }}
+              style={{ borderColor: "rgba(184,160,96,0.2)", color: "rgba(var(--zeglam-text-rgb),0.6)" }}
             >
               Cancelar
             </Button>
@@ -585,23 +585,23 @@ export function AdminUsers() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Nome</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Nome</label>
               <Input
                 value={editAdminForm.name}
                 onChange={(e) => setEditAdminForm({ ...editAdminForm, name: e.target.value })}
                 placeholder="Ex: João Silva"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Usuário</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Usuário</label>
               <Input
                 value={editAdminForm.username}
                 onChange={(e) => setEditAdminForm({ ...editAdminForm, username: e.target.value })}
                 placeholder="Ex: joao.silva"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
           </div>
@@ -609,7 +609,7 @@ export function AdminUsers() {
             <Button
               variant="outline"
               onClick={() => setShowEditAdmin(false)}
-              style={{ borderColor: "rgba(184,160,96,0.2)", color: "rgba(255,255,255,0.6)" }}
+              style={{ borderColor: "rgba(184,160,96,0.2)", color: "rgba(var(--zeglam-text-rgb),0.6)" }}
             >
               Cancelar
             </Button>
@@ -631,46 +631,46 @@ export function AdminUsers() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Nome</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Nome</label>
               <Input
                 value={supplierForm.name}
                 onChange={(e) => setSupplierForm({ ...supplierForm, name: e.target.value })}
                 placeholder="Ex: SP Fornecedor"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Usuário</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Usuário</label>
               <Input
                 value={supplierForm.username}
                 onChange={(e) => setSupplierForm({ ...supplierForm, username: e.target.value })}
                 placeholder="Ex: sp_fornecedor"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Senha (mínimo 8 caracteres)</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Senha (mínimo 8 caracteres)</label>
               <Input
                 type="password"
                 value={supplierForm.password}
                 onChange={(e) => setSupplierForm({ ...supplierForm, password: e.target.value })}
                 placeholder="••••••••"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Painel</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Painel</label>
               <select
                 value={supplierForm.panel}
                 onChange={(e) => setSupplierForm({ ...supplierForm, panel: e.target.value as 'sp' | 'limeira' })}
                 className="mt-1 w-full px-3 py-2 rounded-md text-sm"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               >
-                <option value="sp" style={{ background: "#152340", color: "white" }}>São Paulo</option>
-                <option value="limeira" style={{ background: "#152340", color: "white" }}>Limeira</option>
+                <option value="sp" style={{ background: "#152340", color: "rgb(var(--zeglam-text-rgb))" }}>São Paulo</option>
+                <option value="limeira" style={{ background: "#152340", color: "rgb(var(--zeglam-text-rgb))" }}>Limeira</option>
               </select>
             </div>
           </div>
@@ -678,7 +678,7 @@ export function AdminUsers() {
             <Button
               variant="outline"
               onClick={() => setShowAddSupplier(false)}
-              style={{ borderColor: "rgba(184,160,96,0.2)", color: "rgba(255,255,255,0.6)" }}
+              style={{ borderColor: "rgba(184,160,96,0.2)", color: "rgba(var(--zeglam-text-rgb),0.6)" }}
             >
               Cancelar
             </Button>
@@ -700,35 +700,35 @@ export function AdminUsers() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Nome</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Nome</label>
               <Input
                 value={editSupplierForm.name}
                 onChange={(e) => setEditSupplierForm({ ...editSupplierForm, name: e.target.value })}
                 placeholder="Ex: SP Fornecedor"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Usuário</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Usuário</label>
               <Input
                 value={editSupplierForm.username}
                 onChange={(e) => setEditSupplierForm({ ...editSupplierForm, username: e.target.value })}
                 placeholder="Ex: sp_fornecedor"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Painel</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Painel</label>
               <select
                 value={editSupplierForm.panel}
                 onChange={(e) => setEditSupplierForm({ ...editSupplierForm, panel: e.target.value as 'sp' | 'limeira' })}
                 className="mt-1 w-full px-3 py-2 rounded-md text-sm"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               >
-                <option value="sp" style={{ background: "#152340", color: "white" }}>São Paulo</option>
-                <option value="limeira" style={{ background: "#152340", color: "white" }}>Limeira</option>
+                <option value="sp" style={{ background: "#152340", color: "rgb(var(--zeglam-text-rgb))" }}>São Paulo</option>
+                <option value="limeira" style={{ background: "#152340", color: "rgb(var(--zeglam-text-rgb))" }}>Limeira</option>
               </select>
             </div>
           </div>
@@ -736,7 +736,7 @@ export function AdminUsers() {
             <Button
               variant="outline"
               onClick={() => setShowEditSupplier(false)}
-              style={{ borderColor: "rgba(184,160,96,0.2)", color: "rgba(255,255,255,0.6)" }}
+              style={{ borderColor: "rgba(184,160,96,0.2)", color: "rgba(var(--zeglam-text-rgb),0.6)" }}
             >
               Cancelar
             </Button>
@@ -758,36 +758,36 @@ export function AdminUsers() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Senha Atual</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Senha Atual</label>
               <Input
                 type="password"
                 value={passwordForm.currentPassword}
                 onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
                 placeholder="••••••••"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Nova Senha (mínimo 8 caracteres)</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Nova Senha (mínimo 8 caracteres)</label>
               <Input
                 type="password"
                 value={passwordForm.newPassword}
                 onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
                 placeholder="••••••••"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Confirmar Nova Senha</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Confirmar Nova Senha</label>
               <Input
                 type="password"
                 value={passwordForm.confirmPassword}
                 onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
                 placeholder="••••••••"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
           </div>
@@ -795,7 +795,7 @@ export function AdminUsers() {
             <Button
               variant="outline"
               onClick={() => setShowChangePassword(false)}
-              style={{ borderColor: "rgba(184,160,96,0.2)", color: "rgba(255,255,255,0.6)" }}
+              style={{ borderColor: "rgba(184,160,96,0.2)", color: "rgba(var(--zeglam-text-rgb),0.6)" }}
             >
               Cancelar
             </Button>
@@ -817,36 +817,36 @@ export function AdminUsers() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Senha Atual</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Senha Atual</label>
               <Input
                 type="password"
                 value={supplierPasswordForm.currentPassword}
                 onChange={(e) => setSupplierPasswordForm({ ...supplierPasswordForm, currentPassword: e.target.value })}
                 placeholder="••••••••"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Nova Senha (mínimo 8 caracteres)</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Nova Senha (mínimo 8 caracteres)</label>
               <Input
                 type="password"
                 value={supplierPasswordForm.newPassword}
                 onChange={(e) => setSupplierPasswordForm({ ...supplierPasswordForm, newPassword: e.target.value })}
                 placeholder="••••••••"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
             <div>
-              <label className="text-xs" style={{ color: "rgba(255,255,255,0.6)" }}>Confirmar Nova Senha</label>
+              <label className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>Confirmar Nova Senha</label>
               <Input
                 type="password"
                 value={supplierPasswordForm.confirmPassword}
                 onChange={(e) => setSupplierPasswordForm({ ...supplierPasswordForm, confirmPassword: e.target.value })}
                 placeholder="••••••••"
                 className="mt-1"
-                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
               />
             </div>
           </div>
@@ -854,7 +854,7 @@ export function AdminUsers() {
             <Button
               variant="outline"
               onClick={() => setShowChangeSupplierPassword(false)}
-              style={{ borderColor: "rgba(184,160,96,0.2)", color: "rgba(255,255,255,0.6)" }}
+              style={{ borderColor: "rgba(184,160,96,0.2)", color: "rgba(var(--zeglam-text-rgb),0.6)" }}
             >
               Cancelar
             </Button>

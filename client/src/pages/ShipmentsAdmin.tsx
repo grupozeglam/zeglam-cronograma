@@ -306,7 +306,7 @@ export function ShipmentsAdmin() {
                     border: "1px solid rgba(184,160,96,0.3)",
                     borderRadius: "8px",
                   }}
-                  labelStyle={{ color: "white" }}
+                  labelStyle={{ color: "rgb(var(--zeglam-text-rgb))" }}
                 />
                 <Legend />
                 <Line

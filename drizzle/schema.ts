@@ -147,3 +147,18 @@ export const shipmentsArchived = mysqlTable("shipments_archived", {
 
 export type ShipmentArchived = typeof shipmentsArchived.$inferSelect;
 export type InsertShipmentArchived = typeof shipmentsArchived.$inferInsert;
+
+export const apiKeys = mysqlTable("api_keys", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  keyPrefix: varchar("keyPrefix", { length: 16 }).notNull(),
+  keyHash: varchar("keyHash", { length: 128 }).notNull().unique(),
+  scopes: varchar("scopes", { length: 500 }).default("read").notNull(),
+  ativo: boolean("ativo").default(true).notNull(),
+  createdBy: int("createdBy"),
+  lastUsedAt: timestamp("lastUsedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ApiKey = typeof apiKeys.$inferSelect;
+export type InsertApiKey = typeof apiKeys.$inferInsert;

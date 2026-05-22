@@ -15,6 +15,13 @@
       "when": 1775152326423,
       "tag": "0001_square_tomorrow_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1779413517381,
+      "tag": "0002_fast_adam_warlock",
+      "breakpoints": true
     }
   ]
 }

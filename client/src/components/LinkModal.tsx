@@ -104,16 +104,16 @@ export function LinkModal({ open, onClose, onSubmit, initialData, mode, loading 
   const inputStyle = {
     background: "rgba(255,255,255,0.06)",
     border: "1px solid rgba(184,160,96,0.25)",
-    color: "white",
+    color: "rgb(var(--zeglam-text-rgb))",
   };
 
-  const labelStyle = { color: "rgba(255,255,255,0.55)", fontSize: "0.75rem" };
+  const labelStyle = { color: "rgba(var(--zeglam-text-rgb),0.55)", fontSize: "0.75rem" };
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent
         className="max-w-2xl max-h-[90vh] overflow-y-auto"
-        style={{ background: "#0f1e38", border: "1px solid rgba(184,160,96,0.3)", color: "white" }}
+        style={{ background: "#0f1e38", border: "1px solid rgba(184,160,96,0.3)", color: "rgb(var(--zeglam-text-rgb))" }}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg font-semibold">
@@ -236,7 +236,7 @@ export function LinkModal({ open, onClose, onSubmit, initialData, mode, loading 
               type="button"
               variant="outline"
               onClick={onClose}
-              style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.7)" }}
+              style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(var(--zeglam-text-rgb),0.7)" }}
             >
               Cancelar
             </Button>

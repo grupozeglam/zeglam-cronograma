@@ -36,7 +36,7 @@ export function StatusBadge({ status, statusMap, className = "" }: StatusBadgePr
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${className}`}
+      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${className}`}
       style={{
         color: style.color,
         background: style.bgColor,

@@ -5,11 +5,16 @@ import net from "net";
 import { migrate } from "drizzle-orm/mysql2/migrator";
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import multer from "multer";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import swaggerUi from "swagger-ui-express";
 import { registerOAuthRoutes } from "./oauth";
+import { requireApiKey, generateApiKey } from "./apiAuth";
+import { apiKeys as apiKeysTable } from "../../drizzle/schema";
+import { desc } from "drizzle-orm";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -45,6 +50,25 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
   throw new Error(`No available port found starting from ${startPort}`);
 }
 
+/** Pasta drizzle na raiz do projeto (dev: cwd; build: dist → ../../drizzle). */
+function resolveMigrationsFolder(): string {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const candidates = [
+    path.resolve(process.cwd(), "drizzle"),
+    path.resolve(__dirname, "../../drizzle"),
+    path.resolve(__dirname, "../drizzle"),
+  ];
+  for (const dir of candidates) {
+    if (fs.existsSync(path.join(dir, "meta", "_journal.json"))) {
+      return dir;
+    }
+  }
+  throw new Error(
+    `Pasta de migrations não encontrada. Procurado em: ${candidates.join(", ")}`
+  );
+}
+
 async function startServer() {
   // ── Rodar migrations automaticamente ao iniciar ───────────────
   if (process.env.DATABASE_URL) {
@@ -52,9 +76,7 @@ async function startServer() {
       console.log("[Migration] Conectando ao banco...");
       const connection = await mysql.createConnection(process.env.DATABASE_URL);
       const dbMigrate = drizzle(connection);
-      const __filename = fileURLToPath(import.meta.url);
-      const __dirname = path.dirname(__filename);
-      const migrationsFolder = path.join(__dirname, "../drizzle");
+      const migrationsFolder = resolveMigrationsFolder();
       await migrate(dbMigrate, { migrationsFolder });
       console.log("[Migration] ✅ Migrations aplicadas com sucesso!");
       await connection.end();
@@ -678,6 +700,291 @@ async function startServer() {
       return res.status(500).json({ error: "Erro ao criar links" });
     }
   });
+
+  // ─── Public API v1 ────────────────────────────────────────────────────────────
+  // Aceita autenticação via cookie de admin OU via chave mestre permanente
+  // (header `X-Admin-Key` / `Authorization: Bearer ...`) configurada em ADMIN_MASTER_KEY.
+  async function requireAdmin(req: express.Request, res: express.Response): Promise<{ adminId: number; name: string } | null> {
+    // 1) Master key (permanente — não expira) via env ADMIN_MASTER_KEY
+    const master = process.env.ADMIN_MASTER_KEY;
+    if (master && master.length >= 16) {
+      const headerKey = req.header("x-admin-key");
+      const auth = req.header("authorization");
+      const bearer = auth?.startsWith("Bearer ") ? auth.slice(7).trim() : null;
+      const provided = headerKey || bearer;
+      if (provided && provided === master) {
+        return { adminId: 0, name: "master" };
+      }
+    }
+
+    // 2) Cookie de admin (sessão JWT, expira em 7 dias)
+    try {
+      const { parse: parseCookies } = await import("cookie");
+      const cookies = parseCookies(req.headers.cookie || "");
+      const token = cookies[ADMIN_COOKIE];
+      if (!token) { res.status(401).json({ error: "unauthorized", message: "Forneça X-Admin-Key, Authorization: Bearer <master>, ou faça login como admin." }); return null; }
+      const { payload } = await jose.jwtVerify(token, ADMIN_JWT_SECRET);
+      return { adminId: payload.adminId as number, name: payload.name as string };
+    } catch {
+      res.status(401).json({ error: "unauthorized" });
+      return null;
+    }
+  }
+
+  // List API keys (admin only)
+  app.get("/api/admin/api-keys", async (req, res) => {
+    const admin = await requireAdmin(req, res); if (!admin) return;
+    const db = await (await import("../db")).getDb();
+    if (!db) return res.status(500).json({ error: "database_unavailable" });
+    const rows = await db.select({
+      id: apiKeysTable.id, name: apiKeysTable.name, keyPrefix: apiKeysTable.keyPrefix,
+      scopes: apiKeysTable.scopes, ativo: apiKeysTable.ativo, lastUsedAt: apiKeysTable.lastUsedAt,
+      createdAt: apiKeysTable.createdAt,
+    }).from(apiKeysTable).orderBy(desc(apiKeysTable.createdAt));
+    return res.json(rows);
+  });
+
+  // Create API key — returns raw key once
+  app.post("/api/admin/api-keys", async (req, res) => {
+    const admin = await requireAdmin(req, res); if (!admin) return;
+    const { name, scopes } = req.body ?? {};
+    if (!name || typeof name !== "string") return res.status(400).json({ error: "name_required" });
+    const db = await (await import("../db")).getDb();
+    if (!db) return res.status(500).json({ error: "database_unavailable" });
+    const { raw, prefix, hash } = generateApiKey();
+    await db.insert(apiKeysTable).values({
+      name, keyPrefix: prefix, keyHash: hash,
+      scopes: typeof scopes === "string" ? scopes : "read",
+      createdBy: admin.adminId,
+    });
+    return res.status(201).json({
+      key: raw,
+      prefix,
+      message: "Guarde essa chave em local seguro — ela não poderá ser exibida novamente.",
+    });
+  });
+
+  // Revoke API key
+  app.delete("/api/admin/api-keys/:id", async (req, res) => {
+    const admin = await requireAdmin(req, res); if (!admin) return;
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) return res.status(400).json({ error: "invalid_id" });
+    const db = await (await import("../db")).getDb();
+    if (!db) return res.status(500).json({ error: "database_unavailable" });
+    await db.update(apiKeysTable).set({ ativo: false }).where(eq(apiKeysTable.id, id));
+    return res.json({ success: true });
+  });
+
+  // Get single link by id
+  app.get("/api/v1/links/:id", requireApiKey("read"), async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      if (!Number.isFinite(id)) return res.status(400).json({ error: "invalid_id" });
+      const db = await (await import("../db")).getDb();
+      if (!db) return res.status(500).json({ error: "database_unavailable" });
+      const { links: linksTable } = await import("../../drizzle/schema");
+      const rows = await db.select().from(linksTable).where(eq(linksTable.id, id)).limit(1);
+      if (!rows[0]) return res.status(404).json({ error: "not_found" });
+      return res.json({ data: rows[0] });
+    } catch (err) {
+      console.error("[GET /api/v1/links/:id]", err);
+      return res.status(500).json({ error: "internal_error" });
+    }
+  });
+
+  // Create link
+  app.post("/api/v1/links", requireApiKey("write"), async (req, res) => {
+    try {
+      const { numero, nome, status, departamento, observacoes,
+        encerramentoLink, encerramentoHorario, conferenciaEstoque, romaneiosClientes,
+        postadoFornecedor, dataInicioSeparacao, prazoMaxFinalizar, liberadoEnvio } = req.body ?? {};
+      if (numero === undefined || numero === null || !nome) {
+        return res.status(400).json({ error: "validation_error", message: "Campos obrigatórios: numero, nome." });
+      }
+      const created = await createLink({
+        numero: Number(numero), nome, status, departamento,
+        observacoes, encerramentoLink, encerramentoHorario, conferenciaEstoque, romaneiosClientes,
+        postadoFornecedor, dataInicioSeparacao, prazoMaxFinalizar, liberadoEnvio,
+      } as any);
+      return res.status(201).json({ data: created ?? { numero, nome } });
+    } catch (err) {
+      console.error("[POST /api/v1/links]", err);
+      return res.status(500).json({ error: "internal_error", message: "Erro ao criar link." });
+    }
+  });
+
+  // Update link (partial)
+  app.patch("/api/v1/links/:id", requireApiKey("write"), async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      if (!Number.isFinite(id)) return res.status(400).json({ error: "invalid_id" });
+      await updateLink(id, req.body as any);
+      const db = await (await import("../db")).getDb();
+      if (!db) return res.status(500).json({ error: "database_unavailable" });
+      const { links: linksTable } = await import("../../drizzle/schema");
+      const updated = await db.select().from(linksTable).where(eq(linksTable.id, id)).limit(1);
+      if (!updated[0]) return res.status(404).json({ error: "not_found" });
+      return res.json({ data: updated[0] });
+    } catch (err) {
+      console.error("[PATCH /api/v1/links/:id]", err);
+      return res.status(500).json({ error: "internal_error" });
+    }
+  });
+
+  // Delete link
+  app.delete("/api/v1/links/:id", requireApiKey("write"), async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      if (!Number.isFinite(id)) return res.status(400).json({ error: "invalid_id" });
+      await deleteLink(id);
+      return res.json({ success: true });
+    } catch (err) {
+      console.error("[DELETE /api/v1/links/:id]", err);
+      return res.status(500).json({ error: "internal_error" });
+    }
+  });
+
+  // Public endpoint — protected by API key
+  app.get("/api/v1/links", requireApiKey("read"), async (req, res) => {
+    try {
+      const db = await (await import("../db")).getDb();
+      if (!db) return res.status(500).json({ error: "database_unavailable" });
+      const { links: linksTable } = await import("../../drizzle/schema");
+      const status = typeof req.query.status === "string" ? req.query.status : undefined;
+      const departamento = typeof req.query.departamento === "string" ? req.query.departamento : undefined;
+      const limit = Math.min(Number(req.query.limit) || 100, 500);
+      const offset = Math.max(Number(req.query.offset) || 0, 0);
+
+      let rows = await db.select().from(linksTable);
+      if (status) rows = rows.filter((l: any) => l.status === status);
+      if (departamento) rows = rows.filter((l: any) => l.departamento === departamento);
+      const total = rows.length;
+      const data = rows.slice(offset, offset + limit);
+      return res.json({ data, meta: { total, limit, offset } });
+    } catch (err) {
+      console.error("[GET /api/v1/links]", err);
+      return res.status(500).json({ error: "internal_error" });
+    }
+  });
+
+  // OpenAPI spec + Swagger UI
+  const openApiSpec = {
+    openapi: "3.0.3",
+    info: { title: "Zeglam Cronograma API", version: "1.0.0", description: "API pública para integradores externos do sistema de cronograma Zeglam." },
+    servers: [{ url: "/", description: "Atual" }],
+    components: {
+      securitySchemes: {
+        BearerAuth: { type: "http", scheme: "bearer", description: "Use sua chave: Authorization: Bearer zglm_live_..." },
+        ApiKeyHeader: { type: "apiKey", in: "header", name: "X-API-Key" },
+      },
+      schemas: {
+        Link: {
+          type: "object",
+          properties: {
+            id: { type: "integer" }, numero: { type: "integer" }, nome: { type: "string" },
+            status: { type: "string" }, departamento: { type: "string" },
+            observacoes: { type: "string", nullable: true },
+            encerramentoLink: { type: "string", nullable: true },
+            prazoMaxFinalizar: { type: "string", nullable: true },
+            createdAt: { type: "string", format: "date-time" },
+          },
+        },
+        Error: { type: "object", properties: { error: { type: "string" }, message: { type: "string" } } },
+      },
+    },
+    security: [{ BearerAuth: [] }, { ApiKeyHeader: [] }],
+    paths: {
+      "/api/v1/links": {
+        get: {
+          summary: "Listar links do cronograma",
+          tags: ["Links"],
+          parameters: [
+            { name: "status", in: "query", schema: { type: "string" }, description: "Filtra por status (ex: Link Aberto, Fechado)" },
+            { name: "departamento", in: "query", schema: { type: "string" } },
+            { name: "limit", in: "query", schema: { type: "integer", default: 100, maximum: 500 } },
+            { name: "offset", in: "query", schema: { type: "integer", default: 0 } },
+          ],
+          responses: {
+            "200": {
+              description: "Lista paginada",
+              content: { "application/json": { schema: {
+                type: "object",
+                properties: {
+                  data: { type: "array", items: { $ref: "#/components/schemas/Link" } },
+                  meta: { type: "object", properties: { total: { type: "integer" }, limit: { type: "integer" }, offset: { type: "integer" } } },
+                },
+              }}},
+            },
+            "401": { description: "API key ausente ou inválida", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
+          },
+        },
+        post: {
+          summary: "Criar link",
+          tags: ["Links"],
+          description: "Requer scope `write`.",
+          requestBody: {
+            required: true,
+            content: { "application/json": { schema: {
+              type: "object",
+              required: ["numero", "nome"],
+              properties: {
+                numero: { type: "integer" }, nome: { type: "string" },
+                status: { type: "string" }, departamento: { type: "string" },
+                observacoes: { type: "string", nullable: true },
+                encerramentoLink: { type: "string", nullable: true },
+                encerramentoHorario: { type: "string", nullable: true },
+                conferenciaEstoque: { type: "string", nullable: true },
+                romaneiosClientes: { type: "string", nullable: true },
+                postadoFornecedor: { type: "string", nullable: true },
+                dataInicioSeparacao: { type: "string", nullable: true },
+                prazoMaxFinalizar: { type: "string", nullable: true },
+                liberadoEnvio: { type: "string", nullable: true },
+              },
+            }}},
+          },
+          responses: {
+            "201": { description: "Criado", content: { "application/json": { schema: { type: "object", properties: { data: { $ref: "#/components/schemas/Link" } } } } } },
+            "400": { description: "Erro de validação", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
+            "403": { description: "Sem permissão de escrita", content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } } },
+          },
+        },
+      },
+      "/api/v1/links/{id}": {
+        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
+        get: {
+          summary: "Buscar link por id",
+          tags: ["Links"],
+          responses: {
+            "200": { description: "Encontrado", content: { "application/json": { schema: { type: "object", properties: { data: { $ref: "#/components/schemas/Link" } } } } } },
+            "404": { description: "Não encontrado" },
+          },
+        },
+        patch: {
+          summary: "Atualizar link (parcial)",
+          tags: ["Links"],
+          description: "Requer scope `write`. Envie apenas os campos a alterar.",
+          requestBody: {
+            required: true,
+            content: { "application/json": { schema: { $ref: "#/components/schemas/Link" } } },
+          },
+          responses: {
+            "200": { description: "Atualizado", content: { "application/json": { schema: { type: "object", properties: { data: { $ref: "#/components/schemas/Link" } } } } } },
+            "404": { description: "Não encontrado" },
+          },
+        },
+        delete: {
+          summary: "Excluir link",
+          tags: ["Links"],
+          description: "Requer scope `write`. Exclusão permanente.",
+          responses: {
+            "200": { description: "Excluído", content: { "application/json": { schema: { type: "object", properties: { success: { type: "boolean" } } } } } },
+          },
+        },
+      },
+    },
+  };
+  app.get("/api/v1/openapi.json", (_req, res) => res.json(openApiSpec));
+  app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
 
   // ─── tRPC ─────────────────────────────────────────────────────────────────────
   app.use("/api/trpc", express.json({ limit: "50mb" }), createExpressMiddleware({ router: appRouter, createContext }));

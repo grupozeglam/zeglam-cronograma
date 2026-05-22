@@ -217,7 +217,7 @@ export default function ImportLinksAI() {
             <h1 className="text-lg font-semibold" style={{ color: "#b8a060" }}>Importar Links via IA</h1>
           </div>
           <Button variant="ghost" size="sm" onClick={() => setLocation("/admin")}
-            className="text-xs gap-1" style={{ color: "rgba(255,255,255,0.5)" }}>
+            className="text-xs gap-1" style={{ color: "rgba(var(--zeglam-text-rgb),0.5)" }}>
             <ArrowLeft className="w-3 h-3" /> Voltar
           </Button>
         </div>
@@ -241,7 +241,7 @@ export default function ImportLinksAI() {
                   <SelectItem value="gemini">Google Gemini (Grátis)</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.4)" }}>
+              <p className="text-xs mt-2" style={{ color: "rgba(var(--zeglam-text-rgb),0.4)" }}>
                 {provider === "openai" 
                   ? "Use sua chave OpenAI (paga)" 
                   : "Use sua chave Gemini (grátis em generativelanguage.googleapis.com)"}
@@ -336,7 +336,7 @@ export default function ImportLinksAI() {
                 </label>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={handleResetPrompt}
-                    className="text-xs h-7 px-2" style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.5)" }}>
+                    className="text-xs h-7 px-2" style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(var(--zeglam-text-rgb),0.5)" }}>
                     Restaurar Padrão
                   </Button>
                   <Button size="sm" onClick={handleSavePrompt}
@@ -351,7 +351,7 @@ export default function ImportLinksAI() {
                 className="bg-transparent border text-xs"
                 style={{ borderColor: "rgba(184,160,96,0.2)", minHeight: "150px" }}
               />
-              <p className="text-xs mt-2" style={{ color: "rgba(255,255,255,0.4)" }}>
+              <p className="text-xs mt-2" style={{ color: "rgba(var(--zeglam-text-rgb),0.4)" }}>
                 ⚠️ Certifique-se de que o prompt pede para extrair "closingDate" no formato DD/MM/YYYY
               </p>
             </div>
@@ -391,7 +391,7 @@ export default function ImportLinksAI() {
                       />
                       <div className="flex-1 text-sm">
                         <p className="font-medium">{link.name}</p>
-                        <p style={{ color: "rgba(255,255,255,0.6)" }}>
+                        <p style={{ color: "rgba(var(--zeglam-text-rgb),0.6)" }}>
                           Status: {link.status} | Data: {link.closingDate || "N/A"}
                         </p>
                       </div>

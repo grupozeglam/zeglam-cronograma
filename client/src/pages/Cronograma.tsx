@@ -172,7 +172,7 @@ export default function Cronograma() {
               <div className="hidden sm:block h-8 w-px" style={{ background: "rgba(184,160,96,0.3)" }} />
               <div className="hidden sm:block">
                 <p className="text-xs font-medium tracking-widest uppercase" style={{ color: "#b8a060" }}>Cronograma</p>
-                <p className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>Gestão de Links</p>
+                <p className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.45)" }}>Gestão de Links</p>
               </div>
             </div>
 
@@ -184,7 +184,7 @@ export default function Cronograma() {
                 onClick={() => seedMutation.mutate()}
                 disabled={seedMutation.isPending}
                 className="text-xs gap-1.5 hidden sm:flex"
-                style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.6)", background: "transparent" }}
+                style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(var(--zeglam-text-rgb),0.6)", background: "transparent" }}
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${seedMutation.isPending ? "animate-spin" : ""}`} />
                 Reimportar Planilha
@@ -213,7 +213,7 @@ export default function Cronograma() {
               style={{ background: bg, border: `1px solid ${color}30` }}
             >
               <div className="text-2xl font-bold" style={{ color }}>{value}</div>
-              <div className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.5)" }}>{label}</div>
+              <div className="text-xs mt-0.5" style={{ color: "rgba(var(--zeglam-text-rgb),0.5)" }}>{label}</div>
             </div>
           ))}
         </div>
@@ -230,14 +230,14 @@ export default function Cronograma() {
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="pl-9 text-sm"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
             />
           </div>
 
           <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
             <SelectTrigger
               className="w-[175px] text-sm"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
             >
               <Filter className="w-3.5 h-3.5 mr-1.5" style={{ color: "#b8a060" }} />
               <SelectValue placeholder="Status" />
@@ -253,7 +253,7 @@ export default function Cronograma() {
           <Select value={deptFilter} onValueChange={(v) => { setDeptFilter(v); setPage(1); }}>
             <SelectTrigger
               className="w-[175px] text-sm"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "white" }}
+              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(184,160,96,0.2)", color: "rgb(var(--zeglam-text-rgb))" }}
             >
               <LayoutGrid className="w-3.5 h-3.5 mr-1.5" style={{ color: "#b8a060" }} />
               <SelectValue placeholder="Departamento" />
@@ -272,19 +272,19 @@ export default function Cronograma() {
               size="sm"
               onClick={() => { setSearch(""); setStatusFilter("all"); setDeptFilter("all"); setPage(1); }}
               className="text-xs"
-              style={{ color: "rgba(255,255,255,0.45)" }}
+              style={{ color: "rgba(var(--zeglam-text-rgb),0.45)" }}
             >
               Limpar filtros ×
             </Button>
           )}
 
-          <div className="ml-auto flex items-center gap-2 text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+          <div className="ml-auto flex items-center gap-2 text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.4)" }}>
             {isFetching && !isLoading && (
               <span className="flex items-center gap-1" style={{ color: "#b8a060" }}>
                 <RefreshCw className="w-3 h-3 animate-spin" /> Atualizando...
               </span>
             )}
-            <span><strong style={{ color: "rgba(255,255,255,0.7)" }}>{data?.total ?? 0}</strong> registros</span>
+            <span><strong style={{ color: "rgba(var(--zeglam-text-rgb),0.7)" }}>{data?.total ?? 0}</strong> registros</span>
           </div>
         </div>
 
@@ -339,7 +339,7 @@ export default function Cronograma() {
                     <td colSpan={13} className="text-center py-20">
                       <div className="flex flex-col items-center gap-3">
                         <Search className="w-10 h-10" style={{ color: "rgba(184,160,96,0.3)" }} />
-                        <p style={{ color: "rgba(255,255,255,0.4)" }}>Nenhum registro encontrado</p>
+                        <p style={{ color: "rgba(var(--zeglam-text-rgb),0.4)" }}>Nenhum registro encontrado</p>
                       </div>
                     </td>
                   </tr>
@@ -471,13 +471,13 @@ export default function Cronograma() {
               className="flex items-center justify-between px-4 py-3"
               style={{ borderTop: "1px solid rgba(184,160,96,0.15)", background: "rgba(10,22,40,0.5)" }}
             >
-              <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+              <p className="text-xs" style={{ color: "rgba(var(--zeglam-text-rgb),0.4)" }}>
                 Página {page} de {totalPages} — {data?.total} registros
               </p>
               <div className="flex items-center gap-1">
                 <Button
                   variant="outline" size="icon" className="w-7 h-7"
-                  style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.6)", background: "transparent" }}
+                  style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(var(--zeglam-text-rgb),0.6)", background: "transparent" }}
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page === 1}
                 >
@@ -491,7 +491,7 @@ export default function Cronograma() {
                       key={p} size="icon" className="w-7 h-7 text-xs font-medium"
                       style={p === page
                         ? { background: "linear-gradient(135deg, #c9a84c, #b8a060)", color: "#0a1628", border: "none" }
-                        : { borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.6)", background: "transparent", border: "1px solid rgba(184,160,96,0.3)" }
+                        : { borderColor: "rgba(184,160,96,0.3)", color: "rgba(var(--zeglam-text-rgb),0.6)", background: "transparent", border: "1px solid rgba(184,160,96,0.3)" }
                       }
                       onClick={() => setPage(p)}
                     >
@@ -501,7 +501,7 @@ export default function Cronograma() {
                 })}
                 <Button
                   variant="outline" size="icon" className="w-7 h-7"
-                  style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(255,255,255,0.6)", background: "transparent" }}
+                  style={{ borderColor: "rgba(184,160,96,0.3)", color: "rgba(var(--zeglam-text-rgb),0.6)", background: "transparent" }}
                   onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
                 >
@@ -531,22 +531,22 @@ export default function Cronograma() {
 
       {/* Delete Confirmation */}
       <AlertDialog open={deleteId !== null} onOpenChange={(v) => !v && setDeleteId(null)}>
-        <AlertDialogContent style={{ background: "#152340", border: "1px solid rgba(184,160,96,0.3)", color: "white" }}>
+        <AlertDialogContent style={{ background: "#152340", border: "1px solid rgba(184,160,96,0.3)", color: "rgb(var(--zeglam-text-rgb))" }}>
           <AlertDialogHeader>
-            <AlertDialogTitle style={{ color: "white" }}>Confirmar exclusão</AlertDialogTitle>
-            <AlertDialogDescription style={{ color: "rgba(255,255,255,0.55)" }}>
+            <AlertDialogTitle style={{ color: "rgb(var(--zeglam-text-rgb))" }}>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogDescription style={{ color: "rgba(var(--zeglam-text-rgb),0.55)" }}>
               Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.7)" }}
+              style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(var(--zeglam-text-rgb),0.7)" }}
             >
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => deleteId && deleteMutation.mutate({ id: deleteId })}
-              style={{ background: "#dc2626", color: "white", border: "none" }}
+              style={{ background: "#dc2626", color: "rgb(var(--zeglam-text-rgb))", border: "none" }}
             >
               Excluir
             </AlertDialogAction>
