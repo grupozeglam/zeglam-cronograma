@@ -1,5 +1,0 @@
-onlyBuiltDependencies:
-  - esbuild
-ignoredBuiltDependencies:
-  - "@scarf/scarf"
-  - core-js
