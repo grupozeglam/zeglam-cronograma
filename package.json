@@ -112,6 +112,7 @@
     "vitest": "^2.1.4"
   },
   "pnpm": {
-    "ignoredBuiltDependencies": ["@scarf/scarf"]
+    "onlyBuiltDependencies": ["esbuild"],
+    "ignoredBuiltDependencies": ["@scarf/scarf", "core-js"]
   }
 }
