@@ -18,6 +18,7 @@ import { desc } from "drizzle-orm";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { ENV } from "./env";
 import {
   getAdminByUsername, createLink, updateLink, deleteLink, listLinks,
   createStatus, updateStatus, deleteStatus, listStatuses,
@@ -1027,6 +1028,14 @@ async function startServer() {
     setTimeout(() => { archiveOldShipments(); setInterval(() => { archiveOldShipments(); }, 24 * 60 * 60 * 1000); }, msUntilFirst);
   }
   scheduleArchiveJob();
+
+  // ── Sync externo: semijoias.net → local ────────────────────────────────────
+  if (ENV.semijoisSyncEnabled) {
+    const { syncExternalLinks } = await import("../jobs/sync-external-links");
+    console.log(`[SYNC] Sincronização externa habilitada (intervalo: ${ENV.semijoisSyncInterval / 1000}s)`);
+    syncExternalLinks();
+    setInterval(() => { syncExternalLinks(); }, ENV.semijoisSyncInterval);
+  }
 }
 
 startServer().catch(console.error);

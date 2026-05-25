@@ -11,4 +11,8 @@ export const ENV = {
   evolutionApiKey: process.env.EVOLUTION_API_KEY ?? "",
   evolutionInstance: process.env.EVOLUTION_INSTANCE ?? "",
   whatsappAdminNumber: process.env.WHATSAPP_ADMIN_NUMBER ?? "",
+  semijoisEmail: process.env.SEMIJOIAS_EMAIL ?? "",
+  semijoisPassword: process.env.SEMIJOIAS_PASSWORD ?? "",
+  semijoisSyncEnabled: process.env.SEMIJOIAS_SYNC_ENABLED === "true",
+  semijoisSyncInterval: parseInt(process.env.SEMIJOIAS_SYNC_INTERVAL || "3600000"),
 };
