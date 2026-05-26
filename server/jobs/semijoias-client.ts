@@ -106,11 +106,36 @@ class SemijoiasClient {
   async fetchLinks(): Promise<ExternalLink[]> {
     await this.ensureAuth();
 
+    // virtualcatalog/index é PAGINADO (~51 por página) e filtra por status.
+    // Sem PageNumber/Status=ALL só vinha a 1ª página → faltavam ~130 links.
+    // Paginamos com Status=ALL e dedupe por nome (páginas extras repetem a linha fixa "Minha Loja").
+    const all: ExternalLink[] = [];
+    const seen = new Set<string>();
+    for (let page = 1; page <= 20; page++) {
+      const pageLinks = await this.fetchPage(page);
+      if (pageLinks.length === 0) break;
+      let added = 0;
+      for (const l of pageLinks) {
+        const key = l.nome.trim().toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        all.push(l);
+        added++;
+      }
+      if (added === 0) break; // página só com repetidos → fim real da lista
+    }
+    return all;
+  }
+
+  private async fetchPage(page: number): Promise<ExternalLink[]> {
     const jwt = await this.getJwt("virtualcatalog/index");
 
     const body = new URLSearchParams({
       JWT: jwt,
       Path: "virtualcatalog/index",
+      PageNumber: String(page),
+      SearchText: "",
+      Status: "ALL",
     });
 
     const res = await fetch(`${BASE_URL}/view`, {
@@ -124,7 +149,7 @@ class SemijoiasClient {
       if (text.includes("expirado") || res.status === 401) {
         this.sessionCookie = null;
         await this.ensureAuth();
-        return this.fetchLinks();
+        return this.fetchPage(page);
       }
       throw new Error(`view failed (${res.status}): ${text.slice(0, 200)}`);
     }
