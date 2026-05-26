@@ -51,8 +51,6 @@ export function ZeglamHeader({
           {showLogo && (
             <a
               href={ZEGLAM_SITE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
               className="shrink-0 transition-opacity hover:opacity-85"
             >
               <img
