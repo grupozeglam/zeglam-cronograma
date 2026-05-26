@@ -51,7 +51,7 @@ type SortDir = "asc" | "desc";
 
 export default function PublicView() {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("Link Aberto");
   const [deptFilter, setDeptFilter] = useState("all");
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState("prazoMaxFinalizar");
@@ -72,6 +72,7 @@ export default function PublicView() {
       fetch('/api/links/list')
         .then(r => r.json())
         .then(links => {
+          if (!Array.isArray(links)) { setAllLinks([]); return; }
           const filtered = links.filter((link: any) => link.status !== "Concluída");
           setAllLinks(filtered);
         })
