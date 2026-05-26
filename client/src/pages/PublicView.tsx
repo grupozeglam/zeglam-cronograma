@@ -193,7 +193,7 @@ export default function PublicView() {
         <div className="container py-3 md:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 md:gap-4">
-              <a href={ZEGLAM_SITE_URL} target="_blank" rel="noopener noreferrer">
+              <a href={ZEGLAM_SITE_URL}>
                 <img src={ZEGLAM_LOGO_URL} alt="Grupo Zeglam" className="h-9 w-auto object-contain transition-opacity hover:opacity-85 md:h-12" />
               </a>
               <div className="hidden h-8 w-px bg-primary/30 sm:block" />

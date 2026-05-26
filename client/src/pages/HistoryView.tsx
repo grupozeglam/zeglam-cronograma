@@ -26,7 +26,7 @@ export default function HistoryView() {
         <div className="container py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <a href={SITE_URL} target="_blank" rel="noopener noreferrer">
+              <a href={SITE_URL}>
                 <img src={LOGO_URL} alt="Grupo Zeglam" className="h-12 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
               </a>
               <div className="hidden sm:block h-8 w-px" style={{ background: "rgba(184,160,96,0.3)" }} />
