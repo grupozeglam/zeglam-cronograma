@@ -18,7 +18,6 @@ import { ZeglamPageShell } from "@/components/ZeglamPageShell";
 
 const SUPPLIERS = [
   { value: "sp", label: "Fornecedor São Paulo" },
-  { value: "limeira", label: "Fornecedor Limeira via motoboy" },
 ];
 
 export default function ShipmentSubmit() {
