@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocation } from "wouter";
 
-const LOGO_URL = "https://cdn.grupozeglam.click/logo.png";
+const LOGO_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663391333985/kfJrCdZgsWRY3f9mLQkwBL/zeglam-logo_80654552.png";
+const SITE_URL = "https://www.zeglammelhorcompra.com.br/";
 
 const PAGE_SIZE = 50;
 
@@ -25,7 +26,9 @@ export default function HistoryView() {
         <div className="container py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src={LOGO_URL} alt="Grupo Zeglam" className="h-12 w-auto" />
+              <a href={SITE_URL} target="_blank" rel="noopener noreferrer">
+                <img src={LOGO_URL} alt="Grupo Zeglam" className="h-12 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
+              </a>
               <div className="hidden sm:block h-8 w-px" style={{ background: "rgba(184,160,96,0.3)" }} />
               <div className="hidden sm:block">
                 <p className="text-xs font-medium tracking-widest uppercase" style={{ color: "#b8a060" }}>Histórico</p>
