@@ -117,7 +117,7 @@ export async function autoCloseLinksByEncerramento() {
         .update(links)
         .set({ 
           status: "Fechado", 
-          observacoes: "Fechado para compras!" 
+          observacoes: null 
         })
         .where(and(eq(links.id, link.id), eq(links.status, "Link Aberto")));
 
