@@ -175,16 +175,13 @@ export default function ImportLinksAI() {
         .map(link => {
           // Preservar o status original retornado pela IA
           const rawStatus = link.status || "Link Aberto";
-          // Mapear observações baseado no status
-          let observations = "Aberto para compras!";
-          if (rawStatus === "Fechado" || rawStatus === "Encerrado") observations = "Fechado para compras!";
-          else if (rawStatus === "Envio Liberado" || rawStatus === "Liberado pra Envio" || rawStatus === "Liberado") observations = "Envio liberado!";
+          // Observações ficam em branco ao criar o link (sem preenchimento automático)
           
           return {
             name: link.name,
             status: rawStatus,
             closingDate: link.closingDate,
-            observations,
+            observations: null,
           };
         });
 
